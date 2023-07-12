@@ -47,7 +47,7 @@ jobs:
         host: ${{ secrets.HOST }}
         username: ${{ secrets.EC2_USERNAME }}
         key: ${{ secrets.KEY }}
-        port: 8080
+        port: 22
 #         script: |
 #           sudo docker stop prod-server
 #           sudo docker rm prod-server
