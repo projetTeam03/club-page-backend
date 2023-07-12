@@ -44,10 +44,14 @@ jobs:
     - name: executing remote ssh commands using password
       uses: appleboy/ssh-action@master
       with:
-        host: ${{ secrets.HOST }}
-        username: asdf
+        host: 106.10.50.10
+        username: root
         key: ${{ secrets.KEY }}
-        port: 22
+        port: 8080
+#         host: ${{ secrets.HOST }}
+#         username: asdf
+#         key: ${{ secrets.KEY }}
+#         port: 22
 #         script: |
 #           sudo docker stop prod-server
 #           sudo docker rm prod-server
