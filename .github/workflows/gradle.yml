@@ -42,7 +42,7 @@ jobs:
 
     ## 서버에 접속하여 도커 이미지를 pull 받고 실행하기
     - name: executing remote ssh commands using password
-      uses: appleboy/ssh-action@v0.1.6
+      uses: appleboy/ssh-action@master
       with:
         host: ${{ secrets.HOST }}
         username: ${{ secrets.EC2_USERNAME }}
