@@ -1,0 +1,26 @@
+spring:
+  jpa:
+    generate-ddl: 'false'
+    database: mysql
+    defer-datasource-initialization: true
+    properties:
+      hibernate:
+        use_sql_comments: true
+        format_sql: true
+    hibernate:
+      ddl-auto: none
+    show-sql: true
+    open-in-view: false
+  thymeleaf:
+    cache: false
+  datasource:
+    password: '@project0303'
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: 'developer'
+    url: 'jdbc:mysql://49.50.167.124:3306/club-page?useSSL=false'
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+  devtools:
+    livereload:
+      enabled: true
