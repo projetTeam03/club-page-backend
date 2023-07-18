@@ -1,6 +1,5 @@
 package com.projet.clubpage.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -9,10 +8,10 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name = "tag")
+@Table(name = "position")
 @Getter
 @Setter
-public class Tag {
+public class Position {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "idx", nullable = false)
@@ -21,13 +20,10 @@ public class Tag {
     @Column(name = "name", length = 45)
     private String name;
 
-    @Column(name = "url", length = 300)
-    private String url;
+    @Column(name = "values", length = 45)
+    private String value;
 
-    @OneToMany(mappedBy = "tag", cascade = CascadeType.ALL)
-    @JsonIgnore
-    private Set<PositionTag> position = new HashSet<>();
-
-
+    @OneToMany(mappedBy = "position", cascade = CascadeType.ALL)
+    private Set<PositionTag> tag = new HashSet<>();
 
 }
