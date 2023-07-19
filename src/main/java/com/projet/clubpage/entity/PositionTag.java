@@ -1,6 +1,6 @@
 package com.projet.clubpage.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.projet.clubpage.entity.embeddedId.PositionTagId;
 import lombok.Getter;
 import lombok.Setter;
 
