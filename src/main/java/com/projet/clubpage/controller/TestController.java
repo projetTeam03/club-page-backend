@@ -42,6 +42,6 @@ public class TestController {
         testOutput.setUserProfile("resource/~~~/~~.jpg");
 
 
-        return ApiUtils.success(true, testStatus, testOutput);
+        return ApiUtils.success(true, 200,  "성공", testOutput);
     }
 }

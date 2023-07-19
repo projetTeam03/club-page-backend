@@ -27,3 +27,6 @@ spring:
   devtools:
     livereload:
       enabled: true
+custom:
+  path:
+    upload-tag: '/resource/icon'
