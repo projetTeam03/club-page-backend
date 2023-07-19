@@ -19,6 +19,9 @@ spring:
     username: 'developer'
     url: 'jdbc:mysql://49.50.167.124:3306/club-page?useSSL=false'
   mvc:
+    hiddenmethod:
+      filter:
+        enabled: true
     pathmatch:
       matching-strategy: ant_path_matcher
   devtools:
