@@ -24,13 +24,9 @@ public class HumanController {
 
     @GetMapping("/api/human")
     public CommonResponse<Object> getHumanList(){
-        List<Human> humans = humanService.getHumanList();
+        List<Human> humans = humanService.getHumanList(); //리스트 humans<엔티티 클래스 타입>은 서비스의 getHumanList()메소드로 가져온 것이다.
         return ApiUtils.success(true, 200, "성공했습니다.", humans);
     }
-
-
-    
-
 
 
 }

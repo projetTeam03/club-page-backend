@@ -1,13 +1,15 @@
 package com.projet.clubpage.controller;
 
+import com.projet.clubpage.common.ApiUtils;
 import com.projet.clubpage.common.CommonResponse;
 import com.projet.clubpage.dto.RecruitDTO;
 import com.projet.clubpage.entity.Recruit;
 import com.projet.clubpage.service.RecruitService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 
 @RestController
@@ -17,41 +19,35 @@ public class RecruitController<RecruitJSONRequest> {
 
     private final RecruitService recruitService;
 
-//    @PostMapping("/")
-//    public CommonResponse<Object> postRecruit(
-//            @RequestParam("idx") Integer idx,
-//            @RequestParam("title") String title,
-//            @RequestParam("contents") String contents,
-//            @RequestParam("progress_method") String progress_method,
-//            @RequestParam("partcipants") Integer partcipants,
-//            @RequestParam("views") int views,
-//            @RequestParam("user_idx") int user_idx
-//
-//    ) {
-//        RecruitDTO recruitDTO = new RecruitDTO();
-//        recruitDTO.setIdx(idx);
-//        recruitDTO.setTitle(title);
-//        recruitDTO.setContents(contents);
-//        recruitDTO.setProgress_method(progress_method);
-//        recruitDTO.setPartcipants(partcipants);
-//        recruitDTO.setViews(views);
-//        recruitDTO.setUser_idx(user_idx);
-//        recruitService.saveRecruit(recruitDTO);
-//
-//
-//        return null;
-//    }
-//
-    @ApiOperation(value = "게시글 작성", notes = "게시글을 작성한다.")
-    @PostMapping("/board")
+    //모집등록(DTO 없이)
+    @ApiOperation(value = "모집등록", notes = "모집공고 게시글 등록")
+    @PostMapping("/")
     public CommonResponse<Object> post(@RequestBody Recruit recruit) {
+           recruitService.postRecruit(recruit); //DTO 없이 엔티티를 인자로.
+           return null;
+    }
 
-        recruitService.postRecruit(recruit); //dto 를 서비스단으로 가져감
-        return null;
+    //모집공고 리스트 조회(DTO 추가) - create_date, end_date, views, title, user_idx
 
-
+    @ApiOperation(value = "모집공고 리스트", notes = "모집공고 리스트 조회")
+    @GetMapping("/list")
+    public CommonResponse<Object> getRecruitList(){
+        List<RecruitDTO> recruitDTOList = recruitService.getRecruitList(); //리스트 recruitDTOS<DTO클래스 타입>은 서비스에서 getRecruitList()를 통해 가져온 것이다.
+        return ApiUtils.success(true, 200, "성공했습니다.", recruitDTOList);
 
     }
+
+    //특정 모집공고 상세조회 - title, user_idx, create_date, participant, duration, progress_method, views, scraps, tag_name, tag_url...
+
+//    @GetMapping("/{recruit_idx}")
+//    public CommonResponse<Object> findById(@PathVariable("recruit_idx") Integer idx){
+//        recruitService.updateViews(idx);
+//        RecruitDTO recruitDTO = recruitService.findById(idx);
+//
+//        return ApiUtils.success(true, 200, "성공했습니다.", recruitDTO);
+//
+//    }
+
 
 
 

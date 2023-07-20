@@ -14,16 +14,16 @@ import java.time.LocalDateTime;
 @Entity
 @Getter
 @Setter
-@Table(name="recruit") //varchar 는 스트링으로.
+@Table(name="recruit")
 @EntityListeners(AuditingEntityListener.class)
 public class Recruit {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY) //PK 값의 생성을 DB에게 위임한다.
-    @Column(name = "idx")
+    @Column(name = "idx") //auto-increment 로 자동으로 올라가는 값
     private Integer idx;
 
     @Column(name = "title")
-    private String title;   //ask
+    private String title;   //Varchar - String
 
     @Column(name = "contents")
     private String contents;
@@ -32,18 +32,16 @@ public class Recruit {
     private String duration;
 
     @Column(name = "progress_method")
-    private Integer progress_method;
-// 온라인 0 오프라인 1
-
+    private Integer progress_method;   //(진행방식) 온라인 0, 오프라인 1
 
     @Column(name = "participants")
     private Integer participants;
 
     @Column(name="scraps")
-    private Integer scraps; //처음은 무조건 0
+    private Integer scraps; //처음은 무조건 0, setScraps(0)
 
     @Column(name = "views")
-    private Integer views;
+    private Integer views; //처음은 무조건 0
 
     @Column(name = "user_idx")
     private Integer user_idx;
@@ -51,11 +49,10 @@ public class Recruit {
     @Column(name="state")
     private Integer state; //진행중 0, 마감1
 
-    @Column(name="deleteYn")  //ask
+    @Column(name="deleteYn")  //Y면 삭제 O, N 삭제 X , 프론트에 "N"인것 만 보여주기
     private String deleteYn;
-    //delete Y면 삭제, N 삭제X , n인거만 보여주기
 
-    @CreationTimestamp //생성되었을 때 시간을 만들어주는.
+    @CreationTimestamp //생성되었을 때 시간을 자동으로 만들어준다
     @Column(name="create_date", updatable = false) // 수정 시에는 관여를 안 하게끔.
     private LocalDateTime create_date;
 
@@ -65,18 +62,18 @@ public class Recruit {
 
 
 
-    public static Recruit toSaveEntity(RecruitDTO recruitDTO) {
-        Recruit recruit = new Recruit(); //엔티티 인스턴스화
-
-        recruit.setIdx(recruitDTO.getIdx());
-        recruit.setTitle(recruitDTO.getTitle());
-        recruit.setContents(recruitDTO.getContents());
-//        recruit.setProgress_method(recruitDTO.getProgress_method());
-//        recruit.setPartcipants(recruitDTO.getPartcipants());
-//        recruit.setViews(0);
-//        recruit.setUser_idx(recruitDTO.getUser_idx());
-        return recruit;
-  }
+//    public static Recruit toSaveEntity(RecruitDTO recruitDTO) {
+//        Recruit recruit = new Recruit(); //엔티티 인스턴스화
+//
+//        recruit.setIdx(recruitDTO.getIdx());
+//        recruit.setTitle(recruitDTO.getTitle());
+//        recruit.setContents(recruitDTO.getContents());
+////        recruit.setProgress_method(recruitDTO.getProgress_method());
+////        recruit.setPartcipants(recruitDTO.getPartcipants());
+////        recruit.setViews(0);
+////        recruit.setUser_idx(recruitDTO.getUser_idx());
+//        return recruit;
+//  }
 
 
 }

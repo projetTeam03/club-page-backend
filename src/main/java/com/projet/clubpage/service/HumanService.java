@@ -24,7 +24,7 @@ public class HumanService {
 
     //조회
     public List<Human> getHumanList() {
-        List<Human> humans = humanRepository.findAll();
+        List<Human> humans = humanRepository.findAll(); //리스트 humans<엔티티 휴먼 클래스 타입>는 레포에서 findAll()를 통해 가져온 값이다.
         return humans;
     }
 
