@@ -1,4 +1,4 @@
-package com.projet.clubpage.entity;
+package com.projet.clubpage.entity.embeddedId;
 
 
 import lombok.Getter;
