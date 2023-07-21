@@ -20,7 +20,6 @@ public class PositionController {
     public CommonResponse<Object> getPositionList() {
         List<Position> positions = positionService.getPositionList();
         return ApiUtils.success(true, 200, "포지션 조회 성공", positions);
-
     }
 
 

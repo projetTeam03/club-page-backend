@@ -1,5 +1,6 @@
 package com.projet.clubpage.entity;
 
+import com.projet.clubpage.dto.response.RecruitResponse;
 import io.swagger.models.auth.In;
 import lombok.Builder;
 import lombok.Getter;
@@ -11,6 +12,8 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import javax.persistence.*;
 import java.sql.Time;
 import java.sql.Timestamp;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 
 
@@ -26,7 +29,7 @@ public class Recruit {
     private Integer idx;
 
     @Column(name = "title")
-    private String title;   //Varchar - String
+    private static String title;   //Varchar - String
 
     @Column(name = "contents")
     private String contents;
@@ -41,10 +44,10 @@ public class Recruit {
     private Integer participants;
 
     @Column(name="scraps")
-    private Integer scraps; //처음은 무조건 0, setScraps(0)
+    private static Integer scraps; //처음은 무조건 0, setScraps(0)
 
     @Column(name = "views")
-    private Integer views; //처음은 무조건 0
+    private static Integer views; //처음은 무조건 0
 
     @Column(name = "user_idx")
     private Integer userIdx;
@@ -60,7 +63,7 @@ public class Recruit {
     private Timestamp createDate;
 
     @Column(name="end_date", insertable = false) //인서트를 할 때는 관여를 안 하게끔.
-    private Timestamp endDate; //모집 마감일
+    private static Timestamp endDate; //모집 마감일
 
     @Column(name = "github", length = 200)
     private String github;
@@ -85,20 +88,6 @@ public class Recruit {
     }
 
 
-
-
-//    public static Recruit toSaveEntity(RecruitDTO recruitDTO) {
-//        Recruit recruit = new Recruit(); //엔티티 인스턴스화
-//
-//        recruit.setIdx(recruitDTO.getIdx());
-//        recruit.setTitle(recruitDTO.getTitle());
-//        recruit.setContents(recruitDTO.getContents());
-////        recruit.setProgress_method(recruitDTO.getProgress_method());
-////        recruit.setPartcipants(recruitDTO.getPartcipants());
-////        recruit.setViews(0);
-////        recruit.setUser_idx(recruitDTO.getUser_idx());
-//        return recruit;
-//  }
 
 
 }

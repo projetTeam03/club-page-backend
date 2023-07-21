@@ -16,13 +16,6 @@ import java.util.List;
 @NoArgsConstructor //파라미터가 없는 기본 생성자 자동생성
 public class RecruitRequest {
 
-    //    progress: "",
-//    position: [],
-//    endDate: "",
-//    skill: [],
-//    github: "",
-//    title: "",
-//    contents: "",
     private Integer progress;
     private Integer participants;
     private String duration;
@@ -33,14 +26,15 @@ public class RecruitRequest {
     private String title;
     private String contents;
 
+
+    //디티오의 생성자
     @Builder
     public RecruitRequest(Integer progress, List<Integer> position, List<Integer> skill  ,Integer participants, String endDate, String github, String title, String contents) {
         this.progress = progress;
-//        this.position = position;
-//        this.skill = skill;
         this.endDate = endDate;
         this.github = github;
         this.title = title;
+        this.participants = participants;
         this.contents = contents;
         this.position = position;
         this.skill = skill;
@@ -56,6 +50,7 @@ public class RecruitRequest {
         // java.util.Date를 java.sql.Timestamp로 변환합니다.
         return new Timestamp(date.getTime());
     }
+
 
     public Recruit toEntity() throws ParseException {
         return Recruit.builder()
