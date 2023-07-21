@@ -24,16 +24,16 @@ public class RecruitController<RecruitJSONRequest> {
     @ApiOperation(value = "모집등록", notes = "모집공고 게시글 등록")
     @PostMapping("/")
     public CommonResponse<Object> post(@RequestBody RecruitRequest recruitRequest) throws ParseException {
-           recruitService.postRecruit(recruitRequest);
+        recruitService.postRecruit(recruitRequest);
           //서비스에 디티오를 인자로.
-           return null;
+        return ApiUtils.success(true,200,"공고 등록 성공",null);
     }
 
     //모집공고 리스트 조회(DTO 추가) - scraps, end_date, title, position, tags, user_nickname, views, state(?)
 
     @ApiOperation(value = "모집공고 리스트", notes = "모집공고 리스트 조회")
     @GetMapping("/list")
-    public CommonResponse<Object> response(RecruitResponse recruitResponse) throws ParseException {
+    public CommonResponse<Object> response() throws ParseException {
         List<RecruitResponse> recruitResponseList = recruitService.findAll();
 
         return ApiUtils.success(true, 200, "성공했습니다.", recruitResponseList);
@@ -51,10 +51,6 @@ public class RecruitController<RecruitJSONRequest> {
 //        return ApiUtils.success(true, 200, "성공했습니다.", recruitDTO);
 //
 //    }
-
-
-
-
 }
 
 

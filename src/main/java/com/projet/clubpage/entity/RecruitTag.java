@@ -13,6 +13,7 @@ public class RecruitTag {
     @EmbeddedId
     private RecruitTagId recruitTagId;
 
+
     @ManyToOne(fetch = FetchType.LAZY)
     @MapsId("recruitId")
     @JoinColumn(name = "recruit_idx")

@@ -4,9 +4,6 @@ import lombok.Data;
 
 public class ApiUtils {
 
-
-
-
     public static <T> CommonResponse<T> success(boolean result,int code, String message, T output) {
 
         @Data

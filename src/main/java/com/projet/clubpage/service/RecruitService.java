@@ -90,25 +90,34 @@ public class RecruitService {
         //리쿠르트태그 레포.저장(리쿠르트 태그들)
         recruitTagRepository.saveAll(recruitTags);
 
-
+        //dto에서 엔티티로 변환된 것을 레포에 저장
     }
 
     /* 0 or 1 -> 온라인/오프라인 변환 */
 
     //모집공고 리스트 조회
     public List<RecruitResponse> findAll() throws ParseException {
-        List<Recruit> recruitList = recruitRepository.findAll(); //일단 엔티티 타입의 리스트를 레포에서 가져온다
+
+//        List<Recruit> recruitList = recruitRepository.findAll(); 일단 엔티티 타입의 리스트를 레포에서 가져온다
+        List<Recruit> recruitList = recruitRepository.findAllByDeleteYnEquals("N");
 
         List<RecruitResponse> recruitResponseList = new ArrayList<>(); //디티오 타입의 리스트는 인스턴스화
-        RecruitResponse recruitResponse = new RecruitResponse();
+
 
 
         for (Recruit recruit : recruitList) {
 
-//            recruitResponseList.add(RecruitResponse(recruit));
+            List<Tag> findTagList = recruitTagRepository.getTagByRecruitId(recruit.getIdx());
+            List<Position> findPositionList = recruitPositionRepository.getPositionByRecruitId(recruit.getIdx());
 
+            RecruitResponse recruitResponse = recruit.toDto(recruit, findPositionList, findTagList);
+
+            recruitResponseList.add(recruitResponse);
 
         }
+
+
+
         return recruitResponseList;
     }
 

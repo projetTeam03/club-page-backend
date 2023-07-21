@@ -1,6 +1,8 @@
 package com.projet.clubpage.dto.response;
 
+import com.projet.clubpage.entity.Position;
 import com.projet.clubpage.entity.Recruit;
+import com.projet.clubpage.entity.Tag;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -25,8 +27,8 @@ public class RecruitResponse {
     private Integer scraps;
     private Timestamp endDate;
     private String title;
-    private List<Integer> position;
-    private List<Integer>skill;
+    private List<Position> position;
+    private List<Tag>skill;
     private Integer views;
 //    private Integer userIdx; //(?) user_nickname?
 //    private Integer state;
@@ -36,13 +38,13 @@ public class RecruitResponse {
 
 
     @Builder
-    public RecruitResponse(Recruit recruit) {
-        this.scraps = scraps;
-        this.endDate = endDate;
-        this.title = title;
-        this.position = position;
-        this.skill = skill;
-        this.views = views;
+    public RecruitResponse(Recruit recruit, List<Position> listPosition, List<Tag> listTag) {
+        this.scraps = recruit.getScraps();
+        this.endDate = recruit.getEndDate();
+        this.title = recruit.getTitle();
+        this.position = listPosition;
+        this.skill = listTag;
+        this.views = recruit.getViews();
     }
 
 

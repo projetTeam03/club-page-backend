@@ -15,6 +15,7 @@ import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
+import java.util.List;
 
 
 @Entity
@@ -29,7 +30,7 @@ public class Recruit {
     private Integer idx;
 
     @Column(name = "title")
-    private static String title;   //Varchar - String
+    private String title;   //Varchar - String
 
     @Column(name = "contents")
     private String contents;
@@ -44,10 +45,10 @@ public class Recruit {
     private Integer participants;
 
     @Column(name="scraps")
-    private static Integer scraps; //처음은 무조건 0, setScraps(0)
+    private Integer scraps; //처음은 무조건 0, setScraps(0)
 
     @Column(name = "views")
-    private static Integer views; //처음은 무조건 0
+    private Integer views; //처음은 무조건 0
 
     @Column(name = "user_idx")
     private Integer userIdx;
@@ -63,7 +64,7 @@ public class Recruit {
     private Timestamp createDate;
 
     @Column(name="end_date", insertable = false) //인서트를 할 때는 관여를 안 하게끔.
-    private static Timestamp endDate; //모집 마감일
+    private Timestamp endDate; //모집 마감일
 
     @Column(name = "github", length = 200)
     private String github;
@@ -85,6 +86,14 @@ public class Recruit {
         this.endDate = endDate;
         this.github = github;
 
+    }
+
+    public RecruitResponse toDto(Recruit recruit, List<Position> listPosition, List<Tag> listTag) {
+        return RecruitResponse.builder()
+                .recruit(recruit)
+                .listTag(listTag)
+                .listPosition(listPosition)
+                .build();
     }
 
 
