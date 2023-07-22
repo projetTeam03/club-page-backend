@@ -36,8 +36,8 @@ public class ProjectController {
     }
     @GetMapping("/")
     public String list(Model model) {
-        List<ProjectDto> projectDtoList = projectService.getprojectList();
-        model.addAttribute("postList", projectDtoList);
+//        List<ProjectDto> projectDtoList = projectService.getprojectList();
+//        model.addAttribute("postList", projectDtoList);
         return "board/list.html";
     }
 
@@ -72,38 +72,38 @@ public class ProjectController {
         return "redirect:/";
     }
 
-    @PostMapping("/post")
-    public String write(@RequestParam("file") MultipartFile files, ProjectDto projectDto) {
-        try {
-            String origFilename = files.getOriginalFilename();
-            String filename = new MD5Generator(origFilename).toString();
-            /* 실행되는 위치의 'files' 폴더에 파일이 저장됩니다. */
-            String savePath = System.getProperty("user.dir") + "\\files";
-            /* 파일이 저장되는 폴더가 없으면 폴더를 생성합니다. */
-            if (!new File(savePath).exists()) {
-                try{
-                    new File(savePath).mkdir();
-                }
-                catch(Exception e){
-                    e.getStackTrace();
-                }
-            }
-            String filePath = savePath + "\\" + filename;
-            files.transferTo(new File(filePath));
-
-            FileDto fileDto = new FileDto();
-            fileDto.setOrigFilename(origFilename);
-            fileDto.setFilename(filename);
-            fileDto.setFilePath(filePath);
-
-            Long fileId = fileService.saveFile(fileDto);
-            projectDto.setFileId(fileId);
-            projectService.savePost(projectDto);
-        } catch(Exception e) {
-            e.printStackTrace();
-        }
-        return "redirect:/";
-    }
+//    @PostMapping("/post")
+//    public String write(@RequestParam("file") MultipartFile files, ProjectDto projectDto) {
+//        try {
+//            String origFilename = files.getOriginalFilename();
+//            String filename = new MD5Generator(origFilename).toString();
+//            /* 실행되는 위치의 'files' 폴더에 파일이 저장됩니다. */
+//            String savePath = System.getProperty("user.dir") + "\\files";
+//            /* 파일이 저장되는 폴더가 없으면 폴더를 생성합니다. */
+//            if (!new File(savePath).exists()) {
+//                try{
+//                    new File(savePath).mkdir();
+//                }
+//                catch(Exception e){
+//                    e.getStackTrace();
+//                }
+//            }
+//            String filePath = savePath + "\\" + filename;
+//            files.transferTo(new File(filePath));
+//
+//            FileDto fileDto = new FileDto();
+//            fileDto.setOrigFilename(origFilename);
+//            fileDto.setFilename(filename);
+//            fileDto.setFilePath(filePath);
+//
+//            Long fileId = fileService.saveFile(fileDto);
+//            projectDto.setFileId(fileId);
+//            projectService.savePost(projectDto);
+//        } catch(Exception e) {
+//            e.printStackTrace();
+//        }
+//        return "redirect:/";
+//    }
     @GetMapping("/download/{fileId}")
     public ResponseEntity<Resource> fileDownload(@PathVariable("fileId") Long fileId) throws IOException {
         FileDto fileDto = fileService.getFile(fileId);
