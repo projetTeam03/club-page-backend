@@ -22,7 +22,8 @@ public class RecruitResponse {
    TODO 조회를 위한 응답Dto입니다!
     */
 
-    //모집공고 리스트 조회(DTO 추가) - scraps, end_date, title, position(0~3개까지 보여줌), tags(0~5개까지 보여줌), user_nickname, views, state(?), deleteYn(?)
+    /* 모집공고 리스트 조회(DTO 추가) - scraps, end_date, title, position(0~3개까지 보여줌), tags(0~5개까지 보여줌), user_nickname, views, state(?), deleteYn(쿼리로 처리, dto는 프론트단에서도 볼 수 있어서) */
+    /* position, skill: 저장할 때는 <Integer>, 데이터 내려줄 때는 <Position>,<Tag> */
 
     private Integer scraps;
     private Timestamp endDate;
@@ -30,8 +31,8 @@ public class RecruitResponse {
     private List<Position> position;
     private List<Tag>skill;
     private Integer views;
+    private Integer state;
 //    private Integer userIdx; //(?) user_nickname?
-//    private Integer state;
 //    private String deleteYn;
 
 
@@ -45,6 +46,7 @@ public class RecruitResponse {
         this.position = listPosition;
         this.skill = listTag;
         this.views = recruit.getViews();
+        this.state = recruit.getState();
     }
 
 

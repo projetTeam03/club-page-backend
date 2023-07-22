@@ -1,6 +1,8 @@
 package com.projet.clubpage.service;
 
+import com.projet.clubpage.dto.request.RecruitModify;
 import com.projet.clubpage.dto.request.RecruitRequest;
+import com.projet.clubpage.dto.response.RecruitDetail;
 import com.projet.clubpage.dto.response.RecruitResponse;
 import com.projet.clubpage.entity.*;
 import com.projet.clubpage.entity.embeddedId.RecruitPositionId;
@@ -8,7 +10,6 @@ import com.projet.clubpage.entity.embeddedId.RecruitTagId;
 import com.projet.clubpage.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.HttpClientErrorException;
 
 import javax.transaction.Transactional;
 import java.text.ParseException;
@@ -26,11 +27,12 @@ public class RecruitService {
     private final PositionRepository positionRepository;
     private final TagRepository tagRepository;
 
-    //모집등록
+    /* 모집등록 */
     @Transactional //insert, delete, update
     public void postRecruit(RecruitRequest recruitRequest) throws ParseException {
         //포지션 - 리쿠르트 포지션
         //태그 - 리쿠르트 태그
+        /* 0 or 1 -> 온라인/오프라인 변환 */
 
         //리쿠르트포지션과 리쿠르트태그 리스트
         List<RecruitPosition> recruitPositions = new ArrayList<>();
@@ -42,7 +44,7 @@ public class RecruitService {
 
         //포지션을 디티오의 포지션들(백,프론트,디자이너) 하나씩 대응.
         // position: 스웨거에 입력한 포지션
-        for (Integer position: recruitRequest.getPosition()) {
+        for (Integer position : recruitRequest.getPosition()) {
 
             //디티오로 변환된 엔티티 idx = recruitPosition의 recruit_idx = recruitPositionId의 recruit_idx
             //리쿠르트 포지션 엔티티의 값을 넣어주는 거(아래 4개)
@@ -56,18 +58,18 @@ public class RecruitService {
 
             if (position1.isPresent()) {
 
-             //Ask //position의 idx = recruitPositionId의 position_idx = recruitPosition의 position_idx
+                //Ask //position의 idx = recruitPositionId의 position_idx = recruitPosition의 position_idx
                 recruitPositionId.setPositionId(position);
                 recruitPosition.setPosition(position1.get());
 
-             //recruitPosition의 RecruitPositionId = recruitPositionId
+                //recruitPosition의 RecruitPositionId = recruitPositionId
                 recruitPosition.setRecruitPositionId(recruitPositionId);
 
                 recruitPositions.add(recruitPosition);
             }//todo 조건부 캐치 필요
         }
-                //디티오.getSkill()에 태그 하나씩 대응
-        for (Integer tag: recruitRequest.getSkill()) {
+        //디티오.getSkill()에 태그 하나씩 대응
+        for (Integer tag : recruitRequest.getSkill()) {
 
             RecruitTag recruitTag = new RecruitTag();
 
@@ -90,19 +92,17 @@ public class RecruitService {
         //리쿠르트태그 레포.저장(리쿠르트 태그들)
         recruitTagRepository.saveAll(recruitTags);
 
-        //dto에서 엔티티로 변환된 것을 레포에 저장
+
     }
 
-    /* 0 or 1 -> 온라인/오프라인 변환 */
 
-    //모집공고 리스트 조회
+    /* 모집공고 리스트 조회 */
     public List<RecruitResponse> findAll() throws ParseException {
 
-//        List<Recruit> recruitList = recruitRepository.findAll(); 일단 엔티티 타입의 리스트를 레포에서 가져온다
+        //recruitList = 레포에서 DeleteYn="N" 인 것들만 가져온다.
         List<Recruit> recruitList = recruitRepository.findAllByDeleteYnEquals("N");
 
-        List<RecruitResponse> recruitResponseList = new ArrayList<>(); //디티오 타입의 리스트는 인스턴스화
-
+        List<RecruitResponse> recruitResponseList = new ArrayList<>();
 
 
         for (Recruit recruit : recruitList) {
@@ -110,35 +110,64 @@ public class RecruitService {
             List<Tag> findTagList = recruitTagRepository.getTagByRecruitId(recruit.getIdx());
             List<Position> findPositionList = recruitPositionRepository.getPositionByRecruitId(recruit.getIdx());
 
-            RecruitResponse recruitResponse = recruit.toDto(recruit, findPositionList, findTagList);
+            RecruitResponse recruitResponse = recruit.toDto(recruit, findPositionList, findTagList); //dto로 변환된 recruit,findPositionList,findTagList = recruitResponse
 
             recruitResponseList.add(recruitResponse);
 
         }
 
-
-
         return recruitResponseList;
+    }
+
+
+    /* 특정 모집공고 상세조회 */
+    //idx = recruit_idx
+    public void updateViews(Integer idx) {
+        recruitRepository.updateViews(idx);
+
+    }
+
+    public RecruitDetail findById(Integer idx) {
+        Optional<Recruit> optionalRecruit = recruitRepository.findById(idx);
+
+        if (optionalRecruit.isPresent()) {
+
+            Recruit recruit = optionalRecruit.get();
+
+            List<Tag> findTagList = recruitTagRepository.getTagByRecruitId(recruit.getIdx());
+            List<Position> findPositionList = recruitPositionRepository.getPositionByRecruitId(recruit.getIdx());
+
+            RecruitDetail recruitDetail = recruit.toDetailDto(recruit, findPositionList, findTagList);
+            return recruitDetail;
+
+        } else {
+            return null;
+        }
+    }
+
+    /* 특정 모집공고 수정 1 (불러오기) */
+    public RecruitModify findRegisterById(Integer idx) {
+        Optional<Recruit> optionalRecruit = recruitRepository.findById(idx);
+
+        if (optionalRecruit.isPresent()) {
+            Recruit recruit = optionalRecruit.get();
+
+            List<Tag> findTagList = recruitTagRepository.getTagByRecruitId(recruit.getIdx());
+            List<Position> findPositionList = recruitPositionRepository.getPositionByRecruitId(recruit.getIdx());
+
+            RecruitModify recruitModify = recruit.toRegisterDto(recruit, findPositionList, findTagList);
+            return recruitModify;
+        } else {
+            return null;
+        }
     }
 
 
 
 
-//    public void updateViews(Integer idx) {
-//
-//        recruitRepository.updateViews(idx);
-//
-//    }
-//
-//    public RecruitDTO findById(Integer idx) {
-//        Optional<Recruit> optionalRecruit = recruitRepository.findById(idx);
-//        if (optionalRecruit.isPresent()) {
-//            Recruit recruit = optionalRecruit.get();
-//            RecruitDTO recruitDTO = RecruitDTO.toRecruitDTO(recruit);
-//            return recruitDTO;
-//        } else {
-//            return null;
-//        }
-//
-//    }
+
+
 }
+
+
+    /* 특정 모집공고 수정 */

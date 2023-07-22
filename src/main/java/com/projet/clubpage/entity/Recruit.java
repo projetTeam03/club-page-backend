@@ -1,5 +1,7 @@
 package com.projet.clubpage.entity;
 
+import com.projet.clubpage.dto.request.RecruitModify;
+import com.projet.clubpage.dto.response.RecruitDetail;
 import com.projet.clubpage.dto.response.RecruitResponse;
 import io.swagger.models.auth.In;
 import lombok.Builder;
@@ -97,8 +99,29 @@ public class Recruit {
     }
 
 
+    public RecruitDetail toDetailDto(Recruit recruit, List<Position> listPosition, List<Tag> listTag) {
+        return RecruitDetail.builder()
+                .recruit(recruit)
+                .listTag(listTag)
+                .listPosition(listPosition)
+                .build();
 
 
+    }
+
+    public RecruitModify toRegisterDto(Recruit recruit, List<Position> listPosition, List<Tag> listTag) {
+        return  RecruitModify.builder()
+                .recruit(recruit)
+                .listTag(listTag)
+                .listPosition(listPosition)
+                .build();
+
+
+
+
+
+
+    }
 }
 
 
