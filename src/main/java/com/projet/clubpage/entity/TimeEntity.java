@@ -1,4 +1,4 @@
-package com.projet.clubpage.domain.entity;
+package com.projet.clubpage.entity;
 
 import lombok.Getter;
 import org.springframework.data.annotation.CreatedDate;

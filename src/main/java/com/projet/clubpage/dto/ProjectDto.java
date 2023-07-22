@@ -1,6 +1,6 @@
 package com.projet.clubpage.dto;
 
-import com.projet.clubpage.domain.entity.BoardEntity;
+import com.projet.clubpage.entity.ProjectEntity;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -11,31 +11,33 @@ import java.time.LocalDateTime;
 @Setter
 @ToString
 @NoArgsConstructor
-public class BoardDto {
+public class ProjectDto {
     private Long id;
-    private String writer;
+    private String author;
     private String title;
     private String content;
+    private Long fileId;
     private LocalDateTime createdDate;
     private LocalDateTime modifiedDate;
 
-    public BoardEntity toEntity(){
-        // dto에서 필요한 부분을 빌더 패턴을 통해 entity로 만든다
-        BoardEntity boardEntity = BoardEntity.builder()
+    public ProjectEntity toEntity() {
+        ProjectEntity build = ProjectEntity.builder()
                 .id(id)
-                .writer(writer)
+                .author(author)
                 .title(title)
                 .content(content)
+                .fileId(fileId)
                 .build();
-        return boardEntity;
+        return build;
     }
 
     @Builder
-    public BoardDto(Long id, String title, String content, String writer, LocalDateTime createdDate, LocalDateTime modifiedDate) {
+    public ProjectDto(Long id, String author, String title, String content, Long fileId, LocalDateTime createdDate, LocalDateTime modifiedDate) {
         this.id = id;
-        this.writer = writer;
+        this.author = author;
         this.title = title;
         this.content = content;
+        this.fileId = fileId;
         this.createdDate = createdDate;
         this.modifiedDate = modifiedDate;
     }
