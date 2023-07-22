@@ -1,0 +1,24 @@
+{
+    “result” : true,
+    }
+    “status” : {
+         code : 200,
+         message : “Successfully get comments.”
+    }
+  “output” :    {
+                  ”id” : 1,
+                   “username” : “이름”,
+                   “userprofile” : “url”,
+                   “content” : “내용입니다.”,
+                   “ismine” : true
+                   }
+
+}
+———————————————————-
+{
+    result : false,
+    status : {
+         code : 400,
+         message : “Already deleted post”,
+                           “Fail to get comments. Wrong page number.”
+ }
