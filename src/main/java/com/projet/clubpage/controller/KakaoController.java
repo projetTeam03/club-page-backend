@@ -38,7 +38,7 @@ public class KakaoController {
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("grant_type", "authorization_code");
         params.add("client_id", "7d1b399f667856c2943a67723dd583f0");
-        params.add("redirect_uri", "http://localhost:8080/api/user/login");
+        params.add("redirect_uri", "http://27.96.130.189:8080/api/user/login");
         params.add("code", code);
 
         // 요청하기 위해 헤더(Header)와 데이터(Body)를 합친다.
