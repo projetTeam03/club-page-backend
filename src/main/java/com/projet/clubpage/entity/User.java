@@ -1,5 +1,6 @@
 package com.projet.clubpage.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
@@ -12,10 +13,10 @@ import java.time.Instant;
 @Setter
 @Builder
 @Table(name = "user")
+@JsonIgnoreProperties(ignoreUnknown = true)
 @AllArgsConstructor
 public class User {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "idx", nullable = false)
     private Long id;
 

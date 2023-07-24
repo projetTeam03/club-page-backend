@@ -1,5 +1,6 @@
 package com.projet.clubpage.controller;
 
+import com.projet.clubpage.common.ApiUtils;
 import com.projet.clubpage.common.CommonResponse;
 import com.projet.clubpage.dto.request.OAuthTokenRequest;
 import com.projet.clubpage.dto.response.OAuthTokenResponse;
@@ -76,7 +77,7 @@ public class KakaoController {
 
 
 
-        return null;
+        return ApiUtils.success(true,200,"로그인 성공", oAuthTokenResponse);
     }
 
 }
