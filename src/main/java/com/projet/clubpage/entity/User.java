@@ -1,56 +1,39 @@
 package com.projet.clubpage.entity;
 
-import com.projet.clubpage.security.Role;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
+import java.time.Instant;
 
-@Table
 @Entity
 @Getter
 @Setter
-@NoArgsConstructor
+@Builder
+@Table(name = "user")
+@AllArgsConstructor
 public class User {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "idx")
-    private Long idx;
+    @Column(name = "idx", nullable = false)
+    private Long id;
 
-    @Column
+    @Column(name = "email", nullable = false, length = 120)
     private String email;
 
-    @Column
-    private String name;
-
-    @Column
-    private int deleted;
+    @Column(name = "nickname", nullable = false, length = 45)
+    private String nickname;
 
     @Column(name = "create_at")
-    private Timestamp createDt;
+    @CreationTimestamp
+    private Timestamp createAt;
 
-    @Enumerated(EnumType.STRING)
-    private Role role;
+    @Lob
+    @Column(name = "profile_picture")
+    private String profilePicture;
 
-    @Builder
-    public User(Long idx, String email, String name, int deleted, Timestamp createDt, Role role) {
-        this.idx = idx;
-        this.email = email;
-        this.name = name;
-        this.deleted = deleted;
-        this.createDt = createDt;
-        this.role = role;
-    }
+    public User() {
 
-    public User update(OAuthAttributes attributes) {
-        this.name = attributes.getName();
-        this.email = attributes.getEmail();
-        this.role = Role.USER;
-
-        return this;
     }
 }
