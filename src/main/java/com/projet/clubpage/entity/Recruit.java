@@ -1,7 +1,5 @@
 package com.projet.clubpage.entity;
 
-import com.projet.clubpage.dto.request.RecruitRequest;
-import com.projet.clubpage.dto.request.UpdateRequestDto;
 import com.projet.clubpage.dto.response.RecruitDetail;
 import com.projet.clubpage.dto.response.RecruitResponse;
 import lombok.Builder;
