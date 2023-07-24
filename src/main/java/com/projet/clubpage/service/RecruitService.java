@@ -1,7 +1,7 @@
 package com.projet.clubpage.service;
 
-import com.projet.clubpage.dto.request.RecruitModify;
 import com.projet.clubpage.dto.request.RecruitRequest;
+import com.projet.clubpage.dto.request.UpdateRequestDto;
 import com.projet.clubpage.dto.response.RecruitDetail;
 import com.projet.clubpage.dto.response.RecruitResponse;
 import com.projet.clubpage.entity.*;
@@ -27,6 +27,7 @@ public class RecruitService {
     private final PositionRepository positionRepository;
     private final TagRepository tagRepository;
 
+
     /* 모집등록 */
     @Transactional //insert, delete, update
     public void postRecruit(RecruitRequest recruitRequest) throws ParseException {
@@ -40,7 +41,11 @@ public class RecruitService {
 
         //리쿠르트 = recruitRequest(디티오)를 엔티티로 만든거
         Recruit recruit = recruitRequest.toEntity();
-        Recruit insertRecruit = recruitRepository.save(recruit);
+        Recruit insertRecruit = recruitRepository.save(recruit); //기본키 값이 안들어 있으면 새로 생성, idx(키) 있는 경우는 수정.
+
+
+        System.out.println("");
+
 
         //포지션을 디티오의 포지션들(백,프론트,디자이너) 하나씩 대응.
         // position: 스웨거에 입력한 포지션
@@ -122,9 +127,9 @@ public class RecruitService {
 
     /* 특정 모집공고 상세조회 */
     //idx = recruit_idx
+    @Transactional
     public void updateViews(Integer idx) {
         recruitRepository.updateViews(idx);
-
     }
 
     public RecruitDetail findById(Integer idx) {
@@ -137,37 +142,52 @@ public class RecruitService {
             List<Tag> findTagList = recruitTagRepository.getTagByRecruitId(recruit.getIdx());
             List<Position> findPositionList = recruitPositionRepository.getPositionByRecruitId(recruit.getIdx());
 
-            RecruitDetail recruitDetail = recruit.toDetailDto(recruit, findPositionList, findTagList);
-            return recruitDetail;
+            return recruit.toDetailDto(recruit, findPositionList, findTagList);
 
         } else {
             return null;
         }
     }
 
-    /* 특정 모집공고 수정 1 (불러오기) */
-    public RecruitModify findRegisterById(Integer idx) {
+
+    /* 특정 모집공고 수정 */
+    @Transactional
+    public void update(Integer idx, RecruitRequest recruitRequest) throws ParseException {
+
         Optional<Recruit> optionalRecruit = recruitRepository.findById(idx);
 
         if (optionalRecruit.isPresent()) {
+
             Recruit recruit = optionalRecruit.get();
 
             List<Tag> findTagList = recruitTagRepository.getTagByRecruitId(recruit.getIdx());
             List<Position> findPositionList = recruitPositionRepository.getPositionByRecruitId(recruit.getIdx());
 
-            RecruitModify recruitModify = recruit.toRegisterDto(recruit, findPositionList, findTagList);
-            return recruitModify;
+
+            //findTagList, findPositionList...
+
+            recruit = recruitRequest.toEntity();
+            recruit.setIdx(idx);
+
+
+            recruitRepository.save(recruit);
+
         } else {
-            return null;
+
         }
+
     }
-
-
-
-
 
 
 }
 
 
-    /* 특정 모집공고 수정 */
+//                Recruit recruit = Recruit.toUpdateEntity(recruitRequest);
+//                recruitRepository.save(recruit);
+//        return findById2(recruitRequest.get)
+
+
+
+
+
+

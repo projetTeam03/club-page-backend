@@ -29,7 +29,7 @@ public class RecruitRequest {
 
     //디티오의 생성자
     @Builder
-    public RecruitRequest(Integer progress, List<Integer> position, List<Integer> skill  ,Integer participants, String endDate, String github, String title, String contents) {
+    public RecruitRequest(Integer progress, List<Integer> position, List<Integer> skill  ,Integer participants, String endDate, String github, String title, String contents, String duration) {
         this.progress = progress;
         this.endDate = endDate;
         this.github = github;
@@ -38,11 +38,13 @@ public class RecruitRequest {
         this.contents = contents;
         this.position = position;
         this.skill = skill;
+        this.duration = duration;
+
     }
 
     public static Timestamp convertToTimestamp(String inputDate) throws ParseException {
         // 입력받은 형식과 맞는 패턴을 지정합니다.
-        SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy/MM/dd");
+        SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd");
 
         // 입력된 날짜 문자열을 Date 객체로 파싱합니다.
         java.util.Date date = inputFormat.parse(inputDate);

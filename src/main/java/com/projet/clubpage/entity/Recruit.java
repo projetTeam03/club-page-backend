@@ -1,9 +1,9 @@
 package com.projet.clubpage.entity;
 
-import com.projet.clubpage.dto.request.RecruitModify;
+import com.projet.clubpage.dto.request.RecruitRequest;
+import com.projet.clubpage.dto.request.UpdateRequestDto;
 import com.projet.clubpage.dto.response.RecruitDetail;
 import com.projet.clubpage.dto.response.RecruitResponse;
-import io.swagger.models.auth.In;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,11 +12,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
-import java.sql.Time;
 import java.sql.Timestamp;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
 import java.util.List;
 
 
@@ -26,6 +22,7 @@ import java.util.List;
 @NoArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
 public class Recruit {
+    @Setter
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY) //PK 값의 생성을 DB에게 위임한다.
     @Column(name = "idx") //auto-increment 로 자동으로 올라가는 값
@@ -65,7 +62,7 @@ public class Recruit {
     @Column(name="create_date", updatable = false) // 수정 시에는 관여를 안 하게끔.
     private Timestamp createDate;
 
-    @Column(name="end_date", insertable = false) //인서트를 할 때는 관여를 안 하게끔.
+    @Column(name="end_date")
     private Timestamp endDate; //모집 마감일
 
     @Column(name = "github", length = 200)
@@ -90,6 +87,8 @@ public class Recruit {
 
     }
 
+
+
     public RecruitResponse toDto(Recruit recruit, List<Position> listPosition, List<Tag> listTag) {
         return RecruitResponse.builder()
                 .recruit(recruit)
@@ -109,19 +108,8 @@ public class Recruit {
 
     }
 
-    public RecruitModify toRegisterDto(Recruit recruit, List<Position> listPosition, List<Tag> listTag) {
-        return  RecruitModify.builder()
-                .recruit(recruit)
-                .listTag(listTag)
-                .listPosition(listPosition)
-                .build();
 
 
-
-
-
-
-    }
 }
 
 

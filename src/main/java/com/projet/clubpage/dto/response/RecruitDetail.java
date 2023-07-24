@@ -31,6 +31,7 @@ public class RecruitDetail {
     private String contents;
     private Integer views;
     private Integer scraps;
+    private Timestamp endDate;
 
 
     @Builder
@@ -45,6 +46,7 @@ public class RecruitDetail {
         this.contents = recruit.getContents();
         this.views = recruit.getViews();
         this.scraps = recruit.getScraps();
+        this.endDate = recruit.getEndDate();
     }
 
 
