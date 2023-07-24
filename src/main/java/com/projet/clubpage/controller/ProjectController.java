@@ -1,31 +1,21 @@
 package com.projet.clubpage.controller;
 
-import com.projet.clubpage.dto.ProjectDto;
-import com.projet.clubpage.dto.FileDto;
-import com.projet.clubpage.entity.File;
+import com.projet.clubpage.common.ApiUtils;
+import com.projet.clubpage.common.CommonResponse;
+import com.projet.clubpage.dto.request.ProjectRequest;
+import com.projet.clubpage.entity.Project;
 import com.projet.clubpage.service.ProjectService;
 import com.projet.clubpage.service.FileService;
-import com.projet.clubpage.util.MD5Generator;
-import org.springframework.core.io.InputStreamResource;
-import org.springframework.core.io.Resource;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
+import lombok.Data;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
 
-//@RestController
-//@AllArgsConstructor
-@Controller
+@RestController
+@Data
+@RequestMapping("/api")
 public class ProjectController {
     private ProjectService projectService;
     private FileService fileService;
@@ -34,42 +24,47 @@ public class ProjectController {
         this.projectService = projectService;
         this.fileService = fileService;
     }
-    @GetMapping("/")
-    public String list(Model model) {
-//        List<ProjectDto> projectDtoList = projectService.getprojectList();
-//        model.addAttribute("postList", projectDtoList);
-        return "board/list.html";
+
+    @PostMapping("/project")
+    public CommonResponse<Object> post(@RequestBody ProjectRequest projectRequest) {
+        // TODO : requestbody dto 설정
+            List<Project> projectEntityList = projectService.findAll();
+            return ApiUtils.success(true, 200, "프로젝트 등록", projectEntityList);
     }
 
-    @GetMapping("/post")
-    public String post() {
-        return "board/post.html";
+    @GetMapping("/project/list")
+    public CommonResponse<Object> list(@RequestParam(required = false) String list) {
+            List<Project> projectEntityList = projectService.findAll();
+            return ApiUtils.success(true, 200, "프로젝트 리스트 조회", projectEntityList);
     }
 
-    @GetMapping("/post/{id}")
-    public String detail(@PathVariable("id") Long id, Model model) {
-        ProjectDto projectDto = projectService.getPost(id);
-        model.addAttribute("post", projectDto);
-        return "board/detail.html";
+    @GetMapping("/project/{project_idx}")
+    public CommonResponse<Object> detail(@PathVariable("project_idx") Integer idx, Model model) {
+        ProjectRequest projectDto = projectService.getPost(Long.valueOf(idx));
+        model.addAttribute("detail", projectDto);
+        return ApiUtils.success(true, 200, "특정 프로젝트 상세 조회", projectDto);
     }
 
-    @GetMapping("/post/edit/{id}")
-    public String edit(@PathVariable("id") Long id, Model model) {
-        ProjectDto projectDto = projectService.getPost(id);
-        model.addAttribute("post", projectDto);
-        return "board/edit.html";
+    @GetMapping("/project/like/{project_idx}")
+    public CommonResponse<Object> like(@PathVariable("project_idx") Integer idx, Model model) {
+        ProjectRequest projectDto = projectService.getPost(Long.valueOf(idx));
+        model.addAttribute("like", projectDto);
+        return ApiUtils.success(true, 200, "특정 프로젝트 좋아요", projectDto);
     }
 
-    @PutMapping("/post/edit/{id}")
-    public String update(ProjectDto projectDto) {
-        projectService.savePost(projectDto);
-        return "redirect:/";
+    @PatchMapping("/project/{project_idx}")
+    public CommonResponse<Object> update(@PathVariable("project_idx") Integer idx, Model model) {
+        ProjectRequest projectDto = projectService.getPost(Long.valueOf(idx));
+        model.addAttribute("update", projectDto);
+        return ApiUtils.success(true, 200, "특정 프로젝트 수정", projectDto);
     }
 
-    @DeleteMapping("/post/{id}")
-    public String delete(@PathVariable("id") Long id) {
-        projectService.deletePost(id);
-        return "redirect:/";
+
+    @DeleteMapping("/project/{project_idx}")
+    public CommonResponse<Object> delete(@PathVariable("project_idx") Integer idx, Model model) {
+        ProjectRequest projectDto = projectService.getPost(Long.valueOf(idx));
+        model.addAttribute("delete", projectDto);
+        return ApiUtils.success(true, 200, "특정 프로젝트 삭제", projectDto);
     }
 
 //    @PostMapping("/post")
@@ -104,14 +99,14 @@ public class ProjectController {
 //        }
 //        return "redirect:/";
 //    }
-    @GetMapping("/download/{fileId}")
-    public ResponseEntity<Resource> fileDownload(@PathVariable("fileId") Long fileId) throws IOException {
-        FileDto fileDto = fileService.getFile(fileId);
-        Path path = Paths.get(fileDto.getFilePath());
-        Resource resource = new InputStreamResource(Files.newInputStream(path));
-        return ResponseEntity.ok()
-                .contentType(MediaType.parseMediaType("application/octet-stream"))
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileDto.getOrigFilename() + "\"")
-                .body(resource);
-    }
+//    @GetMapping("/download/{fileId}")
+//    public ResponseEntity<Resource> fileDownload(@PathVariable("fileId") Long fileId) throws IOException {
+//        FileDto fileDto = fileService.getFile(fileId);
+//        Path path = Paths.get(fileDto.getFilePath());
+//        Resource resource = new InputStreamResource(Files.newInputStream(path));
+//        return ResponseEntity.ok()
+//                .contentType(MediaType.parseMediaType("application/octet-stream"))
+//                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileDto.getOrigFilename() + "\"")
+//                .body(resource);
+//    }
 }

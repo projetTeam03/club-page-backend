@@ -1,20 +1,19 @@
-package com.projet.clubpage.dto;
+package com.projet.clubpage.dto.request;
 
-import com.projet.clubpage.entity.File;
 import lombok.*;
 
 @Getter
 @Setter
 @ToString
 @NoArgsConstructor
-public class FileDto {
+public class FileRequest {
     private Long id;
     private String origFilename;
     private String filename;
     private String filePath;
 
-    public File toEntity() {
-        File build = File.builder()
+    public com.projet.clubpage.entity.File toEntity() {
+        com.projet.clubpage.entity.File build = com.projet.clubpage.entity.File.builder()
                 .id(id)
                 .origFilename(origFilename)
                 .filename(filename)
@@ -24,7 +23,7 @@ public class FileDto {
     }
 
     @Builder
-    public FileDto(Long id, String origFilename, String filename, String filePath) {
+    public FileRequest(Long id, String origFilename, String filename, String filePath) {
         this.id = id;
         this.origFilename = origFilename;
         this.filename = filename;

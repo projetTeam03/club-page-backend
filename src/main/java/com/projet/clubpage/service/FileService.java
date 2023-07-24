@@ -1,7 +1,6 @@
 package com.projet.clubpage.service;
 
-import com.projet.clubpage.dto.FileDto;
-import com.projet.clubpage.entity.File;
+import com.projet.clubpage.dto.request.FileRequest;
 import com.projet.clubpage.repository.FileRepository;
 import org.springframework.stereotype.Service;
 
@@ -16,15 +15,15 @@ public class FileService {
     }
 
     @Transactional
-    public Long saveFile(FileDto fileDto) {
+    public Long saveFile(FileRequest fileDto) {
         return fileRepository.save(fileDto.toEntity()).getId();
     }
 
     @Transactional
-    public FileDto getFile(Long id) {
-        File file = fileRepository.findById(id).get();
+    public FileRequest getFile(Long id) {
+        com.projet.clubpage.entity.File file = fileRepository.findById(id).get();
 
-        FileDto fileDto = FileDto.builder()
+        FileRequest fileDto = FileRequest.builder()
                 .id(id)
                 .origFilename(file.getOrigFilename())
                 .filename(file.getFilename())
