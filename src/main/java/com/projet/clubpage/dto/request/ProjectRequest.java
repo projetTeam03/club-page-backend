@@ -1,8 +1,13 @@
 package com.projet.clubpage.dto.request;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.projet.clubpage.entity.Project;
 import lombok.*;
 
-import java.time.LocalDateTime;
+import java.sql.Timestamp;
+import java.util.Date;
+import java.util.List;
+
 
 // controller와 service 간에 주고받을 객체를 정의하며, 최종적으로는 view에 뿌려줄 객체
 // Entity와 속성이 같을 수 있으나, 여러 service를 거쳐야 하는 경우 dto의 몸집은 더 커짐
@@ -11,29 +16,28 @@ import java.time.LocalDateTime;
 @ToString
 @NoArgsConstructor
 public class ProjectRequest {
-    private Integer idx;
+
+    public static Timestamp convert(Date date) {
+        Date utilDate = new java.util.Date();
+        Timestamp sqlTimeStamp = convert(utilDate);
+        return sqlTimeStamp;
+    }
+
     private String title;
     private String image;
     private String youtube;
-    private String content;
-    private String teamMember;
-    private String teamName;
-    private String github;
     private String startDate;
     private String endDate;
+    private String content;
     private String distribution;
-    private LocalDateTime createdDate;
-    private Integer mainCategoryIdx;
-    private Integer subCategoryIdx;
-    private Integer userIdx;
-    private Integer views;
-    private Integer likes;
-    private Boolean deleteYn;
-    private LocalDateTime modifiedDate;
+    private String teamName;
+    private String teamMember;
+    private String github;
 
-    public com.projet.clubpage.entity.Project toEntity() {
-        com.projet.clubpage.entity.Project build = com.projet.clubpage.entity.Project.builder()
-                .idx(idx)
+
+
+    public Project toEntity() {
+        Project build = Project.builder()
                 .title(title)
                 .image(image)
                 .youtube(youtube)
@@ -44,26 +48,15 @@ public class ProjectRequest {
                 .startDate(startDate)
                 .endDate(endDate)
                 .distribution(distribution)
-                .createdDate(createdDate)
-                .mainCategoryIdx(mainCategoryIdx)
-                .subCategoryIdx(subCategoryIdx)
-                .userIdx(userIdx)
-                .views(views)
-                .likes(likes)
-                .deleteYn(deleteYn)
-                .modifiedDate(modifiedDate)
                 .build();
         return build;
     }
 
     @Builder
-    public ProjectRequest(Integer id, String title, String image, String youtube,
+    public ProjectRequest(String title, String image, String youtube,
                           String content, String teamMember, String teamName,
-                          String github, String startDate, String endDate, String distribution,
-                          LocalDateTime createdDate, Integer mainCategoryIdx, Integer subCategoryIdx, Integer userIdx,
-                          Integer views, Integer likes, Boolean deleteYn, LocalDateTime modifiedDate
-    ) {
-        this.idx = idx;
+                          String github, String startDate, String endDate, String distribution
+                          ) {
         this.title = title;
         this.image = image;
         this.youtube = youtube;
@@ -74,13 +67,9 @@ public class ProjectRequest {
         this.startDate = startDate;
         this.endDate = endDate;
         this.distribution = distribution;
-        this.createdDate = createdDate;
-        this.mainCategoryIdx = mainCategoryIdx;
-        this.subCategoryIdx = subCategoryIdx;
-        this.userIdx = userIdx;
-        this.views = views;
-        this.likes = likes;
-        this.deleteYn = deleteYn;
-        this.modifiedDate = modifiedDate;
+
+    }
+
+    public void addAttribute(String list, List<ProjectRequest> projectRequestList) {
     }
 }

@@ -1,21 +1,23 @@
 package com.projet.clubpage.entity;
 
-import lombok.AccessLevel;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.CreatedDate;
+import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
+import java.sql.Timestamp;
+
 
 @Getter
 @Entity
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
-public class Project extends Timestamp {
+public class Project{
 
     @Id
     @GeneratedValue
@@ -39,7 +41,7 @@ public class Project extends Timestamp {
     @Column(length = 30, nullable = false)
     private String teamName;
 
-    @Column(length = 300, nullable = false)
+    @Column(length = 300)
     private String github;
 
     @Column(length = 10, nullable = false)
@@ -51,11 +53,12 @@ public class Project extends Timestamp {
     @Column(length = 300, nullable = false)
     private String distribution;
 
-    @CreatedDate
+    @CreationTimestamp
+    @JsonFormat(pattern = "yyyy-MM-dd'T'hh:mm", timezone = "Asia/Seoul")
     @Column(updatable = false)
-    private LocalDateTime createdDate;
+    private Timestamp createdDate;
 
-    @Column
+    @Column(nullable = false)
     private Integer mainCategoryIdx;
 
     @Column
@@ -74,14 +77,15 @@ public class Project extends Timestamp {
     private Boolean deleteYn;
 
     @LastModifiedDate
-    private LocalDateTime modifiedDate;
+    @JsonFormat(pattern = "yyyy-MM-dd'T'hh:mm", timezone = "Asia/Seoul")
+    private Timestamp modifiedDate;
 
     @Builder
     public Project(Integer idx, String title, String image, String youtube,
                    String content, String teamMember, String teamName,
                    String github, String startDate, String endDate, String distribution,
-                   LocalDateTime createdDate, Integer mainCategoryIdx, Integer subCategoryIdx, Integer userIdx,
-                   Integer views, Integer likes, Boolean deleteYn, LocalDateTime modifiedDate
+                   Timestamp createdDate, Integer mainCategoryIdx, Integer subCategoryIdx, Integer userIdx,
+                   Integer views, Integer likes, Boolean deleteYn, Timestamp modifiedDate
                          ) {
         this.idx = idx;
         this.title = title;
@@ -103,4 +107,11 @@ public class Project extends Timestamp {
         this.deleteYn = deleteYn;
         this.modifiedDate = modifiedDate;
     }
+
+
+
+    public void setTitle(String title) {
+    }
+
+
 }

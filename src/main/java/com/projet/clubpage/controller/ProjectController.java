@@ -3,68 +3,67 @@ package com.projet.clubpage.controller;
 import com.projet.clubpage.common.ApiUtils;
 import com.projet.clubpage.common.CommonResponse;
 import com.projet.clubpage.dto.request.ProjectRequest;
-import com.projet.clubpage.entity.Project;
+import com.projet.clubpage.dto.response.ProjectResponse;
+
 import com.projet.clubpage.service.ProjectService;
-import com.projet.clubpage.service.FileService;
+
 import lombok.Data;
-import org.springframework.ui.Model;
+import lombok.Getter;
+import lombok.Setter;
+
 import org.springframework.web.bind.annotation.*;
 
-
 import java.util.List;
-
+@Getter
+@Setter
 @RestController
 @Data
 @RequestMapping("/api")
 public class ProjectController {
     private ProjectService projectService;
-    private FileService fileService;
 
-    public ProjectController(ProjectService projectService, FileService fileService) {
+
+    public ProjectController(ProjectService projectService) {
         this.projectService = projectService;
-        this.fileService = fileService;
+
     }
 
     @PostMapping("/project")
     public CommonResponse<Object> post(@RequestBody ProjectRequest projectRequest) {
-        // TODO : requestbody dto 설정
-            List<Project> projectEntityList = projectService.findAll();
-            return ApiUtils.success(true, 200, "프로젝트 등록", projectEntityList);
+        projectService.Post(projectRequest);
+        return ApiUtils.success(true, 200, "프로젝트 등록",null);
     }
 
     @GetMapping("/project/list")
-    public CommonResponse<Object> list(@RequestParam(required = false) String list) {
-            List<Project> projectEntityList = projectService.findAll();
-            return ApiUtils.success(true, 200, "프로젝트 리스트 조회", projectEntityList);
+    public CommonResponse<Object> list(ProjectRequest ProjectRequest) {
+            List<ProjectRequest> projectRequestList = projectService.getproject();
+        ProjectRequest.addAttribute("List", projectRequestList);
+            return ApiUtils.success(true, 200, "프로젝트 리스트 조회", projectRequestList);
     }
 
     @GetMapping("/project/{project_idx}")
-    public CommonResponse<Object> detail(@PathVariable("project_idx") Integer idx, Model model) {
-        ProjectRequest projectDto = projectService.getPost(Long.valueOf(idx));
-        model.addAttribute("detail", projectDto);
-        return ApiUtils.success(true, 200, "특정 프로젝트 상세 조회", projectDto);
+    public CommonResponse<ProjectResponse> detail(@PathVariable("project_idx") Integer project_idx) {
+        ProjectResponse detail = projectService.getPost(project_idx);
+        return ApiUtils.success(true, 200, "특정 프로젝트 상세 조회",detail);
     }
 
     @GetMapping("/project/like/{project_idx}")
-    public CommonResponse<Object> like(@PathVariable("project_idx") Integer idx, Model model) {
-        ProjectRequest projectDto = projectService.getPost(Long.valueOf(idx));
-        model.addAttribute("like", projectDto);
-        return ApiUtils.success(true, 200, "특정 프로젝트 좋아요", projectDto);
+    public CommonResponse<Object> like(@PathVariable("project_idx") Integer project_idx, @RequestBody ProjectRequest projectRequest) {
+        projectService.postProject(projectRequest);
+        return ApiUtils.success(true, 200, "특정 프로젝트 좋아요",projectRequest);
     }
 
     @PatchMapping("/project/{project_idx}")
-    public CommonResponse<Object> update(@PathVariable("project_idx") Integer idx, Model model) {
-        ProjectRequest projectDto = projectService.getPost(Long.valueOf(idx));
-        model.addAttribute("update", projectDto);
-        return ApiUtils.success(true, 200, "특정 프로젝트 수정", projectDto);
+    public CommonResponse<Object> update(@PathVariable("project_idx") Integer project_idx, @RequestBody ProjectRequest projectRequest) {
+        projectService.update(projectRequest);
+        return ApiUtils.success(true, 200, "특정 프로젝트 수정",projectRequest);
     }
 
 
     @DeleteMapping("/project/{project_idx}")
-    public CommonResponse<Object> delete(@PathVariable("project_idx") Integer idx, Model model) {
-        ProjectRequest projectDto = projectService.getPost(Long.valueOf(idx));
-        model.addAttribute("delete", projectDto);
-        return ApiUtils.success(true, 200, "특정 프로젝트 삭제", projectDto);
+    public CommonResponse<Object> delete(@PathVariable("project_idx") Integer project_idx, @RequestBody ProjectRequest projectRequest) {
+        projectService.delete(project_idx);
+        return ApiUtils.success(true, 200, "특정 프로젝트 삭제", projectRequest);
     }
 
 //    @PostMapping("/post")
