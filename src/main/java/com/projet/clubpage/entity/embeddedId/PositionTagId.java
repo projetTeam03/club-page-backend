@@ -19,5 +19,4 @@ public class PositionTagId implements Serializable {
     @Column(name = "tag_idx")
     private Integer tagId;
 
-
 }
