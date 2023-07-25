@@ -38,7 +38,7 @@ public class RecruitController<RecruitJSONRequest> {
 
 
 
-    /* 모집공고 리스트 조회 - scraps, end_date, title, position, tag, [user_nickname], views, state, (deleteYn(쿼리)), [comments] */
+    /* 모집공고 리스트 조회 - scraps, end_date, title, position, tag, [user_nickname], views, state, (deleteYn(쿼리)) */
 
     @ApiOperation(value = "모집공고 리스트", notes = "모집공고 리스트 조회")
     @GetMapping("/list")

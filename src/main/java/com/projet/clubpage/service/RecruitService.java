@@ -28,17 +28,11 @@ public class RecruitService {
 
 
     /* 모집등록 */
-    @Transactional //insert, delete, update
+    @Transactional
     public void postRecruit(RecruitRequest recruitRequest) throws ParseException {
-        //포지션 - 리쿠르트 포지션
-        //태그 - 리쿠르트 태그
-        /* 0 or 1 -> 온라인/오프라인 변환 */
 
-        //리쿠르트포지션과 리쿠르트태그 리스트
-
-        //리쿠르트 = recruitRequest(디티오)를 엔티티로 만든거
         Recruit recruit = recruitRequest.toEntity();
-        Recruit insertRecruit = recruitRepository.save(recruit); //기본키 값이 안들어 있으면 새로 생성, idx(키) 있는 경우는 수정.
+        Recruit insertRecruit = recruitRepository.save(recruit);
 
         List<RecruitPosition> recruitPositionsList = positionInsert(recruitRequest.getPosition(), insertRecruit);
         List<RecruitTag> recruitTagsList = tagInsert(recruitRequest.getSkill(), insertRecruit);
@@ -69,7 +63,7 @@ public class RecruitService {
             List<Tag> findTagList = recruitTagRepository.getTagByRecruitId(recruit.getIdx());
             List<Position> findPositionList = recruitPositionRepository.getPositionByRecruitId(recruit.getIdx());
 
-            RecruitResponse recruitResponse = recruit.toDto(recruit, findPositionList, findTagList); //dto로 변환된 recruit,findPositionList,findTagList = recruitResponse
+            RecruitResponse recruitResponse = recruit.toDto(recruit, findPositionList, findTagList);
 
             recruitResponseList.add(recruitResponse);
 
@@ -78,14 +72,17 @@ public class RecruitService {
         return recruitResponseList;
     }
 
+
+
     /* 조회수 */
     @Transactional
     public void updateViews(Integer idx) {
         recruitRepository.updateViews(idx);
     }
 
+
+
     /* 특정 모집공고 상세조회 */
-    //idx = recruit_idx
 
     public RecruitDetail findById(Integer idx) {
         Optional<Recruit> optionalRecruit = recruitRepository.findById(idx);
@@ -118,7 +115,7 @@ public class RecruitService {
             //기존에 들어가 있던 태그나 포지션이 삭제가 되어야함.
 
 
-            //findTagList, findPositionList...
+            //findTagList, findPositionList
             Recruit recruit = recruitRequest.toEntity();
             recruit.setIdx(idx);
             recruit.setViews(recruit1.getViews());
@@ -144,6 +141,7 @@ public class RecruitService {
     public List<RecruitTag> tagInsert(List<Integer> tagList, Recruit insertRecruit) {
         List<RecruitTag> recruitTags = new ArrayList<>();
         for (Integer tag : tagList) {
+
             //디티오.getSkill()에 태그 하나씩 대응
             RecruitTag recruitTag = new RecruitTag();
 
@@ -177,7 +175,7 @@ public class RecruitService {
             recruitPosition.setRecruit(insertRecruit);
             recruitPositionId.setRecruitId(insertRecruit.getIdx());
 
-            //레포에서 조회
+
             Optional<Position> position1 = positionRepository.findById(position);
 
             if (position1.isPresent()) {
@@ -198,34 +196,20 @@ public class RecruitService {
     /* 특정 모집공고 삭제 */
     public void delete(Integer idx) {
 
-//        Optional<Recruit> recruit = Optional.ofNullable(recruitRepository.findById(idx).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 Id의 게시글 입니다.")));
-//
-//        recruitRepository.deleteById(idx);
-
-
         Optional<Recruit> optionalRecruit = recruitRepository.findById(idx);
 
         if (optionalRecruit.isPresent()) {
 
             Recruit recruit = optionalRecruit.get();
 
-//            Recruit recruit1 = recruitRepository.findRecruitByDeleteYnEquals("N");
-
-
-            recruit.setDeleteYn("Y");
-
-            recruitRepository.save(recruit);
+            recruitRepository.deleteRecruit(idx);
 
 
         } else {
 
         }
 
-
     }
-
-
-
 
 }
 

@@ -10,7 +10,7 @@ import java.util.Date;
 import java.util.List;
 
 
-//DTO: 계층(데이터베이스, 컨트롤러, 엔티티) 사이의 데이터 교환을 위한 객체. Entity 를 요청과 응답에 사용한다면 응답시 필요하지 않은 속성도 함께 보내진다. 하지만 특정 API에서 필요한 DTO를 별도로 만들면 '해당 API에서 필요한 필드들로만 구성하여' 응답 객체를 만들 수 있다.
+
 
 @Getter
 @NoArgsConstructor //파라미터가 없는 기본 생성자 자동생성

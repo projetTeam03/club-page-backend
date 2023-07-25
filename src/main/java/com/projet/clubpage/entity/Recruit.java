@@ -98,6 +98,7 @@ public class Recruit {
     }
 
 
+
     public RecruitDetail toDetailDto(Recruit recruit, List<Position> listPosition, List<Tag> listTag) {
         return RecruitDetail.builder()
                 .recruit(recruit)
