@@ -44,6 +44,7 @@ public class Recruit {
     @Column(name="scraps")
     private Integer scraps; //처음은 무조건 0, setScraps(0)
 
+    @Setter
     @Column(name = "views")
     private Integer views; //처음은 무조건 0
 
@@ -53,6 +54,7 @@ public class Recruit {
     @Column(name="state")
     private Integer state; //진행중 0, 마감1
 
+    @Setter
     @Column(name="delete_yn")  //Y면 삭제 O, N 삭제 X , 프론트에 "N"인것 만 보여주기
     private String deleteYn;
 

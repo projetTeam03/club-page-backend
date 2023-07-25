@@ -23,11 +23,7 @@ public class RecruitController<RecruitJSONRequest> {
 
     /* todo optional 예외처리 (후순위)
 
-     *  todo endDate: null X , duration 설정완료와 함께 endDate 찍혀야.
-     *  todo startDate: 1. 등록 시 저장되고 프론트에 안보임 2. 조회 시 프론트에 안보임 3. 상세조회 시 보임. 4. 수정할 때 안보이지만 수정등록후 저장됨.
-     *  todo position, tag 갯수 제한 처리
      *  todo 상세조회나 수정을 위한 등록페이지 조회시, 레포에서 deleteYn 고려해야 하는지
-     *  todo scraps(유저 번호, 게시글 번호)
      *  todo paging 처리 */
 
 
@@ -71,6 +67,7 @@ public class RecruitController<RecruitJSONRequest> {
     }
 
 
+
     /* 특정 모집공고 수정 - participants, progress_method, duration, tag(skill), endDate, position, github, title, contents */
 
     /*  endDate는 수정불가 */
@@ -85,15 +82,16 @@ public class RecruitController<RecruitJSONRequest> {
 
     }
 
-//    @ApiOperation(value = "특정 모집공고 수정 ", notes = "특정 모집공고 수정하기")
-//    @PatchMapping("/{recruit_idx}")
-//    public CommonResponse<Object> update(@PathVariable("recruit_idx") Integer idx, @RequestBody RecruitRequest recruitRequest) throws ParseException { //원본 디티오
-//
-//        RecruitRequest updatedRequest = RecruitService.updateRequest(idx, recruitRequest);
-//
-//        return ApiUtils.success(true, 200, "성공했습니다.", updatedRequest);
-//
-//    }
+
+    /* 특정 모집공고 삭제 */
+    @ApiOperation(value = "특정 모집공고 삭제 ", notes = "특정 모집공고 삭제하기")
+    @DeleteMapping("/{recruit_idx}")
+    public CommonResponse<Object> delete(@PathVariable("recruit_idx") Integer idx){
+        recruitService.delete(idx);
+
+        return ApiUtils.success(true, 200, "삭제했습니다.", null);
+    }
+
 
 
 }

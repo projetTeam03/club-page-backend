@@ -18,5 +18,5 @@ public interface RecruitRepository extends JpaRepository<Recruit, Integer> {
     @Query(value = "update Recruit b set b.views=b.views+1 where b.idx=:idx")
     void updateViews(@Param("idx") Integer idx);
 
-
+//    Recruit findRecruitByDeleteYnEquals(String y);
 }
