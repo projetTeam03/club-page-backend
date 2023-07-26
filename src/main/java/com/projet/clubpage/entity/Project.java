@@ -1,12 +1,17 @@
 package com.projet.clubpage.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
+import java.text.ParseException;
+
+import static com.projet.clubpage.dto.request.ProjectRequest.convertToTimestamp;
 
 
 @Getter
@@ -28,22 +33,26 @@ public class Project{
     @Column(length = 300, nullable = false)
     private String youtube;
 
-    @Column(columnDefinition = "TEXT", nullable = false)
-    private String content;
+    @Column(nullable = false)
+    private String contents;
 
-    @Column(length = 100, nullable = false)
+    @Column(name="team_member",length = 100, nullable = false)
     private String teamMember;
 
-    @Column(length = 30, nullable = false)
+    @Column(name="team_name",length = 30, nullable = false)
     private String teamName;
 
     @Column(length = 300)
     private String github;
 
-    @Column(length = 10, nullable = false)
+//    @Temporal(value = TemporalType.TIMESTAMP)
+//    @CreationTimestamp
+    @Column(name="start_date")
     private Timestamp startDate;
 
-    @Column(length = 10, nullable = false)
+//    @Temporal(value = TemporalType.TIMESTAMP)
+//    @CreationTimestamp
+    @Column(name="end_date")
     private Timestamp endDate;
 
     @Column(length = 300, nullable = false)
@@ -54,7 +63,7 @@ public class Project{
 //    @Column(updatable = false)
 //    private Timestamp createdDate;
 
-    @Column
+    @Column(name="user_idx")
     private Integer userIdx;
 
     @Column
@@ -72,7 +81,7 @@ public class Project{
 
     @Builder
     public Project(Integer idx, String title, String image, String youtube,
-                   String content, String teamMember, String teamName,
+                   String contents, String teamMember, String teamName,
                    String github, Timestamp startDate, Timestamp endDate, String distribution,
                     Integer userIdx, Integer views, Integer likes, String deleteYn
                          ) {
@@ -80,7 +89,7 @@ public class Project{
         this.title = title;
         this.image = image;
         this.youtube = youtube;
-        this.content = content;
+        this.contents = contents;
         this.teamMember = teamMember;
         this.teamName = teamName;
         this.github = github;
@@ -88,13 +97,25 @@ public class Project{
         this.endDate = endDate;
         this.distribution = distribution;
         this.userIdx = userIdx;
-        this.views = views;
-        this.likes = likes;
-        this.deleteYn = deleteYn;
+        this.views = 0;
+        this.likes = 0 ;
+        this.deleteYn = "N";
     }
 
-    public void setTitle(String title) {
+    public Project toDto() throws ParseException {
+        Project build = Project.builder()
+                .title(title)
+                .image(image)
+                .youtube(youtube)
+                .contents(contents)
+                .teamMember(teamMember)
+                .teamName(teamName)
+                .github(github)
+                .startDate(startDate)
+                .endDate(endDate)
+                .distribution(distribution)
+                .userIdx(userIdx)
+                .build();
+        return build;
     }
-
-
 }

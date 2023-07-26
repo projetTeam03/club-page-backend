@@ -9,9 +9,12 @@ import com.projet.clubpage.repository.ProjectRepository;
 
 
 import javax.transaction.Transactional;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
+import static com.projet.clubpage.dto.request.ProjectRequest.convertToTimestamp;
 
 @AllArgsConstructor
 @Service
@@ -20,33 +23,25 @@ public class ProjectService {
         private ProjectRepository projectRepository;
 
 
-    // Entity -> Dto로 변환
-//    private ProjectResponse convertEntityToDto(ProjectResponse projectResponse) {
-//        return ProjectResponse.builder()
-////                    .idx(project.getIdx())
-//                    .title(project.getTitle())
-//                    .image(project.getImage())
-//                    .youtube(project.getYoutube())
-//                    .content(project.getContent())
-//                    .teamMember(project.getTeamMember())
-//                    .teamName(project.getTeamName())
-//                    .github(project.getGithub())
-//                    .startDate(project.getStartDate())
-//                    .endDate(project.getEndDate())
-//                    .distribution(project.getDistribution())
-//                    .createdDate(project.getCreatedDate())
-//                    .mainCategoryIdx(project.getMainCategoryIdx())
-//                    .subCategoryIdx(project.getSubCategoryIdx())
-//                    .userIdx(project.getUserIdx())
-//                    .views(project.getViews())
-//                    .likes(project.getLikes())
-//                    .deleteYn(project.getDeleteYn())
-//                    .modifiedDate(project.getModifiedDate())
-//                    .build();
-//    }
+//     Entity -> Dto로 변환
+    private ProjectResponse convertEntityToDto(ProjectResponse projectResponse) {
+        return ProjectResponse.builder()
+                    .title(projectResponse.getTitle())
+                    .image(projectResponse.getImage())
+                    .youtube(projectResponse.getYoutube())
+                    .contents(projectResponse.getContents())
+                    .teamMember(projectResponse.getTeamMember())
+                    .teamName(projectResponse.getTeamName())
+                    .github(projectResponse.getGithub())
+                    .startDate(projectResponse.getStartDate())
+                    .endDate(projectResponse.getEndDate())
+                    .distribution(projectResponse.getDistribution())
+                    .userIdx(projectResponse.getUserIdx())
+                    .build();
+    }
 
     @Transactional
-    public List<ProjectRequest> getproject() {
+    public List<ProjectRequest> getprojectList() {
         List<Project> projectEntityList = projectRepository.findAll();
         List<ProjectRequest> projectDtoList = new ArrayList<>();
 
@@ -55,12 +50,12 @@ public class ProjectService {
                     .title(project.getTitle())
                     .image(project.getImage())
                     .youtube(project.getYoutube())
-                    .content(project.getContent())
+                    .contents(project.getContents())
                     .teamMember(project.getTeamMember())
                     .teamName(project.getTeamName())
                     .github(project.getGithub())
-                    .startDate(project.getStartDate())
-                    .endDate(project.getEndDate())
+                    .startDate(project.toString())
+                    .endDate(String.valueOf(project.getEndDate()))
                     .distribution(project.getDistribution())
                     .userIdx(project.getUserIdx())
                     .build();
@@ -69,31 +64,27 @@ public class ProjectService {
         return projectDtoList;
     }
 
+//    public ProjectResponse addProject(ProjectResponse projectResponse) {
+//        /* dto -> entity builder */
+//        ProjectResponse projectResponse1 = ProjectResponse.builder(projectResponse).build();
+//
+//        /* save (insert) */
+//        projectResponse = projectRepository.save(projectResponse1);
+//
+//        return projectResponse;
+//    }
+
     @Transactional
-    public ProjectResponse getPost(Integer project_idx) {
+    public void getPost(ProjectRequest projectRequest) throws ParseException {
         // Optional : NPE(NullPointerException) 방지
-        Optional<Project> projectWrapper = projectRepository.findById(project_idx);
-        Project project = projectWrapper.get();
-
-        ProjectResponse projectResponse = ProjectResponse.builder()
-                .title(project.getTitle())
-                .image(project.getImage())
-                .youtube(project.getYoutube())
-                .content(project.getContent())
-                .teamMember(project.getTeamMember())
-                .teamName(project.getTeamName())
-                .github(project.getGithub())
-                .startDate(project.getStartDate())
-                .endDate(project.getEndDate())
-                .distribution(project.getDistribution())
-                .userIdx(project.getUserIdx())
-                .build();
-
-        return projectResponse;
+         Project project = projectRequest.toEntity();
+         projectRepository.save(project);
     }
 
+
+
     @Transactional
-    public Integer Post(ProjectRequest projectRequest) {
+    public Integer Post(ProjectRequest projectRequest) throws ParseException {
         return projectRepository.save(projectRequest.toEntity()).getIdx();
     }
 

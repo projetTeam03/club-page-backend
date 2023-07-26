@@ -1,5 +1,6 @@
 package com.projet.clubpage.controller;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.projet.clubpage.common.ApiUtils;
 import com.projet.clubpage.common.CommonResponse;
 import com.projet.clubpage.dto.request.ProjectRequest;
@@ -7,12 +8,12 @@ import com.projet.clubpage.dto.response.ProjectResponse;
 
 import com.projet.clubpage.service.ProjectService;
 
-import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import org.springframework.web.bind.annotation.*;
 
+import java.sql.Timestamp;
+import java.text.ParseException;
 import java.util.List;
 @Getter
 @Setter
@@ -20,6 +21,9 @@ import java.util.List;
 @Data
 @RequestMapping("/api")
 public class ProjectController {
+
+
+
     private ProjectService projectService;
 
 
@@ -29,22 +33,22 @@ public class ProjectController {
     }
 
     @PostMapping("/project")
-    public CommonResponse<Object> post(@RequestBody ProjectRequest projectRequest) {
-        projectService.Post(projectRequest);
+    public CommonResponse<Object> post(@RequestBody ProjectRequest projectRequest) throws ParseException {
+        projectService.getPost(projectRequest);
         return ApiUtils.success(true, 200, "프로젝트 등록",null);
     }
 
     @GetMapping("/project/list")
     public CommonResponse<Object> list(ProjectRequest ProjectRequest) {
-            List<ProjectRequest> projectRequestList = projectService.getproject();
+            List<ProjectRequest> projectRequestList = projectService.getprojectList();
         ProjectRequest.addAttribute("List", projectRequestList);
             return ApiUtils.success(true, 200, "프로젝트 리스트 조회", projectRequestList);
     }
 
     @GetMapping("/project/{project_idx}")
-    public CommonResponse<ProjectResponse> detail(@PathVariable("project_idx") Integer project_idx) {
-        ProjectResponse detail = projectService.getPost(project_idx);
-        return ApiUtils.success(true, 200, "특정 프로젝트 상세 조회",detail);
+    public CommonResponse<ProjectResponse> detail(@PathVariable("project_idx") Integer project_idx) throws ParseException {
+//        ProjectResponse detail = projectService.getPost(project_idx);
+        return ApiUtils.success(true, 200, "특정 프로젝트 상세 조회",null);
     }
 
     @GetMapping("/project/like/{project_idx}")

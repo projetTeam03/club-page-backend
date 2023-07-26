@@ -1,9 +1,12 @@
 package com.projet.clubpage.dto.request;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.projet.clubpage.entity.Project;
 import lombok.*;
 
 import java.sql.Timestamp;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -16,18 +19,23 @@ import java.util.List;
 @NoArgsConstructor
 public class ProjectRequest {
 
-    public static Timestamp convert(Date date) {
-        Date utilDate = new java.util.Date();
-        Timestamp sqlTimeStamp = convert(utilDate);
-        return sqlTimeStamp;
+    public static Timestamp convertToTimestamp(String inputDate) throws ParseException {
+        // 입력받은 형식과 맞는 패턴을 지정합니다.
+        SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd");
+
+        // 입력된 날짜 문자열을 Date 객체로 파싱합니다.
+        Date date = inputFormat.parse(inputDate);
+
+        // java.util.Date를 java.sql.Timestamp로 변환합니다.
+        return new Timestamp(date.getTime());
     }
 
     private String title;
     private String image;
     private String youtube;
-    private Timestamp startDate;
-    private Timestamp endDate;
-    private String content;
+    private String startDate;
+    private String endDate;
+    private String contents;
     private String distribution;
     private String teamName;
     private String teamMember;
@@ -35,17 +43,17 @@ public class ProjectRequest {
     private Integer userIdx;
 
 
-    public Project toEntity() {
+    public Project toEntity() throws ParseException {
         Project build = Project.builder()
                 .title(title)
                 .image(image)
                 .youtube(youtube)
-                .content(content)
+                .contents(contents)
                 .teamMember(teamMember)
                 .teamName(teamName)
                 .github(github)
-                .startDate(startDate)
-                .endDate(endDate)
+                .startDate(convertToTimestamp(startDate))
+                .endDate(convertToTimestamp(endDate))
                 .distribution(distribution)
                 .userIdx(userIdx)
                 .build();
@@ -54,14 +62,14 @@ public class ProjectRequest {
 
     @Builder
     public ProjectRequest(String title, String image, String youtube,
-                          String content, String teamMember, String teamName,
-                          String github, Timestamp startDate, Timestamp endDate, String distribution,
+                          String contents, String teamMember, String teamName,
+                          String github, String startDate, String endDate, String distribution,
                           Integer userIdx
                           ) {
         this.title = title;
         this.image = image;
         this.youtube = youtube;
-        this.content = content;
+        this.contents = contents;
         this.teamMember = teamMember;
         this.teamName = teamName;
         this.github = github;

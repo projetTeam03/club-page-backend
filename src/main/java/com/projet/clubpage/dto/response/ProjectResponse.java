@@ -5,6 +5,7 @@ import com.projet.clubpage.entity.Project;
 import lombok.*;
 
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -13,21 +14,15 @@ import java.util.List;
 @Getter
 @Setter
 @ToString
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
 public class ProjectResponse {
-
-    public static Timestamp convert(Date date) {
-        Date utilDate = new java.util.Date();
-        Timestamp sqlTimeStamp = convert(utilDate);
-        return sqlTimeStamp;
-    }
 
     private String title;
     private String image;
     private String youtube;
-    private Timestamp startDate;
-    private Timestamp endDate;
-    private String content;
+    private String startDate;
+    private String endDate;
+    private String contents;
     private String distribution;
     private String teamName;
     private String teamMember;
@@ -36,14 +31,14 @@ public class ProjectResponse {
 
     @Builder
     public ProjectResponse(String title, String image, String youtube,
-                          String content, String teamMember, String teamName,
-                          String github, Timestamp startDate, Timestamp endDate, String distribution,
+                          String contents, String teamMember, String teamName,
+                          String github, String startDate, String endDate, String distribution,
                            Integer userIdx
     ) {
         this.title = title;
         this.image = image;
         this.youtube = youtube;
-        this.content = content;
+        this.contents = contents;
         this.teamMember = teamMember;
         this.teamName = teamName;
         this.github = github;
@@ -54,6 +49,4 @@ public class ProjectResponse {
 
     }
 
-    public void addAttribute(String delete, ProjectResponse projectResponse) {
-    }
 }
