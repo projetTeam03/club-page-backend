@@ -2,6 +2,7 @@ package com.projet.clubpage.dto.response;
 
 import lombok.*;
 
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
 
@@ -11,6 +12,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class ProjectDetailResponse {
 
+
     private String title;
     private String image;
     private String youtube;
@@ -18,19 +20,18 @@ public class ProjectDetailResponse {
     private String teamMember;
     private String teamName;
     private String github;
-    private String startDate;
-    private String endDate;
+    private Timestamp startDate;
+    private Timestamp endDate;
     private String distribution;
-    private Integer mainCategoryIdx;
-    private Integer subCategoryIdx;
     private Integer views;
     private Integer likes;
+    private Integer userIdx;
 
     @Builder
     public ProjectDetailResponse( String title, String image, String youtube,
                                  String content, String teamMember, String teamName,
-                                 String github, String startDate, String endDate, String distribution,
-                                  Integer mainCategoryIdx, Integer subCategoryIdx,Integer views,Integer likes
+                                 String github, Timestamp startDate, Timestamp endDate, String distribution,
+                                  Integer views,Integer likes, Integer userIdx
       ) {
         this.title = title;
         this.image = image;
@@ -42,10 +43,9 @@ public class ProjectDetailResponse {
         this.startDate = startDate;
         this.endDate = endDate;
         this.distribution = distribution;
-        this.mainCategoryIdx = mainCategoryIdx;
-        this.subCategoryIdx = subCategoryIdx;
         this.views = views;
         this.likes = likes;
+        this.userIdx = userIdx;
     }
 
 

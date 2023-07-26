@@ -17,8 +17,7 @@ import java.util.Optional;
 @Service
 public class ProjectService {
 
-    //boardRepository 객체 생성
-    private ProjectRepository projectRepository;
+        private ProjectRepository projectRepository;
 
 
     // Entity -> Dto로 변환
@@ -53,7 +52,6 @@ public class ProjectService {
 
         for(Project project : projectEntityList) {
             ProjectRequest projectDto = ProjectRequest.builder()
-//                    .idx(project.getIdx())
                     .title(project.getTitle())
                     .image(project.getImage())
                     .youtube(project.getYoutube())
@@ -64,32 +62,12 @@ public class ProjectService {
                     .startDate(project.getStartDate())
                     .endDate(project.getEndDate())
                     .distribution(project.getDistribution())
-//                    .createdDate(project.getCreatedDate())
-//                    .mainCategoryIdx(project.getMainCategoryIdx())
-//                    .subCategoryIdx(project.getSubCategoryIdx())
-//                    .userIdx(project.getUserIdx())
-//                    .views(project.getViews())
-//                    .likes(project.getLikes())
-//                    .deleteYn(project.getDeleteYn())
-//                    .modifiedDate(project.getModifiedDate())
+                    .userIdx(project.getUserIdx())
                     .build();
             projectDtoList.add(projectDto);
         }
         return projectDtoList;
     }
-
-
-//    @Transactional
-//    public List<BoardDto> getBoardlist(Integer pageNum) {
-//
-//        List<BoardDto> boardDtoList = new ArrayList<>();
-//
-//        for (Board board : boardEntities) {
-//            boardDtoList.add(this.convertEntityToDto(board));
-//        }
-//
-//        return boardDtoList;
-//    }
 
     @Transactional
     public ProjectResponse getPost(Integer project_idx) {
@@ -98,7 +76,6 @@ public class ProjectService {
         Project project = projectWrapper.get();
 
         ProjectResponse projectResponse = ProjectResponse.builder()
-//                .idx(project.getIdx())
                 .title(project.getTitle())
                 .image(project.getImage())
                 .youtube(project.getYoutube())
@@ -109,14 +86,7 @@ public class ProjectService {
                 .startDate(project.getStartDate())
                 .endDate(project.getEndDate())
                 .distribution(project.getDistribution())
-//                .createdDate(project.getCreatedDate())
-//                .mainCategoryIdx(project.getMainCategoryIdx())
-//                .subCategoryIdx(project.getSubCategoryIdx())
-//                .userIdx(project.getUserIdx())
-//                .views(project.getViews())
-//                .likes(project.getLikes())
-//                .deleteYn(project.getDeleteYn())
-//                .modifiedDate(project.getModifiedDate())
+                .userIdx(project.getUserIdx())
                 .build();
 
         return projectResponse;

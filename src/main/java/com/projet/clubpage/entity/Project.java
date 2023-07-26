@@ -1,12 +1,8 @@
 package com.projet.clubpage.entity;
 
-
-import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.CreationTimestamp;
-import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
@@ -20,7 +16,7 @@ import java.sql.Timestamp;
 public class Project{
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer idx;
 
     @Column(length = 50, nullable = false)
@@ -45,24 +41,18 @@ public class Project{
     private String github;
 
     @Column(length = 10, nullable = false)
-    private String startDate;
+    private Timestamp startDate;
 
     @Column(length = 10, nullable = false)
-    private String endDate;
+    private Timestamp endDate;
 
     @Column(length = 300, nullable = false)
     private String distribution;
 
-    @CreationTimestamp
-    @JsonFormat(pattern = "yyyy-MM-dd'T'hh:mm", timezone = "Asia/Seoul")
-    @Column(updatable = false)
-    private Timestamp createdDate;
-
-    @Column(nullable = false)
-    private Integer mainCategoryIdx;
-
-    @Column
-    private Integer subCategoryIdx;
+//    @CreationTimestamp
+//    @JsonFormat(pattern = "yyyy-MM-dd'T'hh:mm", timezone = "Asia/Seoul")
+//    @Column(updatable = false)
+//    private Timestamp createdDate;
 
     @Column
     private Integer userIdx;
@@ -74,18 +64,17 @@ public class Project{
     private Integer likes;
 
     @Column
-    private Boolean deleteYn;
+    private String deleteYn;
 
-    @LastModifiedDate
-    @JsonFormat(pattern = "yyyy-MM-dd'T'hh:mm", timezone = "Asia/Seoul")
-    private Timestamp modifiedDate;
+//    @LastModifiedDate
+//    @JsonFormat(pattern = "yyyy-MM-dd'T'hh:mm:ss", timezone = "Asia/Seoul")
+//    private Timestamp modifiedDate;
 
     @Builder
     public Project(Integer idx, String title, String image, String youtube,
                    String content, String teamMember, String teamName,
-                   String github, String startDate, String endDate, String distribution,
-                   Timestamp createdDate, Integer mainCategoryIdx, Integer subCategoryIdx, Integer userIdx,
-                   Integer views, Integer likes, Boolean deleteYn, Timestamp modifiedDate
+                   String github, Timestamp startDate, Timestamp endDate, String distribution,
+                    Integer userIdx, Integer views, Integer likes, String deleteYn
                          ) {
         this.idx = idx;
         this.title = title;
@@ -98,17 +87,11 @@ public class Project{
         this.startDate = startDate;
         this.endDate = endDate;
         this.distribution = distribution;
-        this.createdDate = createdDate;
-        this.mainCategoryIdx = mainCategoryIdx;
-        this.subCategoryIdx = subCategoryIdx;
         this.userIdx = userIdx;
         this.views = views;
         this.likes = likes;
         this.deleteYn = deleteYn;
-        this.modifiedDate = modifiedDate;
     }
-
-
 
     public void setTitle(String title) {
     }

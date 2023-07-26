@@ -1,6 +1,5 @@
 package com.projet.clubpage.dto.request;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.projet.clubpage.entity.Project;
 import lombok.*;
 
@@ -26,14 +25,14 @@ public class ProjectRequest {
     private String title;
     private String image;
     private String youtube;
-    private String startDate;
-    private String endDate;
+    private Timestamp startDate;
+    private Timestamp endDate;
     private String content;
     private String distribution;
     private String teamName;
     private String teamMember;
     private String github;
-
+    private Integer userIdx;
 
 
     public Project toEntity() {
@@ -48,6 +47,7 @@ public class ProjectRequest {
                 .startDate(startDate)
                 .endDate(endDate)
                 .distribution(distribution)
+                .userIdx(userIdx)
                 .build();
         return build;
     }
@@ -55,7 +55,8 @@ public class ProjectRequest {
     @Builder
     public ProjectRequest(String title, String image, String youtube,
                           String content, String teamMember, String teamName,
-                          String github, String startDate, String endDate, String distribution
+                          String github, Timestamp startDate, Timestamp endDate, String distribution,
+                          Integer userIdx
                           ) {
         this.title = title;
         this.image = image;
@@ -67,6 +68,7 @@ public class ProjectRequest {
         this.startDate = startDate;
         this.endDate = endDate;
         this.distribution = distribution;
+        this.userIdx = userIdx;
 
     }
 
