@@ -6,14 +6,18 @@ import com.projet.clubpage.dto.response.RecruitResponse;
 import com.projet.clubpage.entity.*;
 import com.projet.clubpage.entity.embeddedId.RecruitPositionId;
 import com.projet.clubpage.entity.embeddedId.RecruitTagId;
+import com.projet.clubpage.entity.embeddedId.ScrapId;
 import com.projet.clubpage.repository.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -25,13 +29,17 @@ public class RecruitService {
     private final RecruitTagRepository recruitTagRepository;
     private final PositionRepository positionRepository;
     private final TagRepository tagRepository;
+    private final UserRepository userRepository;
+    private final ScrapRepository scrapRepository;
 
 
     /* 모집등록 */
     @Transactional
-    public void postRecruit(RecruitRequest recruitRequest) throws ParseException {
+    public void postRecruit(RecruitRequest recruitRequest, Long userId) throws ParseException {
 
         Recruit recruit = recruitRequest.toEntity();
+        recruit.setUserIdx(userId);
+
         Recruit insertRecruit = recruitRepository.save(recruit);
 
         List<RecruitPosition> recruitPositionsList = positionInsert(recruitRequest.getPosition(), insertRecruit);
@@ -42,31 +50,46 @@ public class RecruitService {
         //리쿠르트태그 레포.저장(리쿠르트 태그들)
         recruitTagRepository.saveAll(recruitTagsList);
 
-
-        System.out.println("");
-
-
     }
 
 
     /* 모집공고 리스트 조회 */
-    public List<RecruitResponse> findAll() throws ParseException {
+    public List<RecruitResponse> findAll(List<Integer> skills, String sortType, Integer state) throws ParseException {
+
+        String sortColumn = "";
+
+        if (sortType == null){
+            sortColumn = "createDate";
+        } else if (sortType.equals("scrap")) {
+            sortColumn = "scrap";
+        } else if (sortType.equals("views")) {
+            sortColumn = "views";
+        } else {
+            sortColumn = "createDate";
+        }
+
+        List<Recruit> recruitList = new ArrayList<>();
 
         //recruitList = 레포에서 DeleteYn="N" 인 것들만 가져온다.
-        List<Recruit> recruitList = recruitRepository.findAllByDeleteYnEquals("N");
+        if (skills == null || skills.isEmpty()) {
+            recruitList = recruitRepository.findAllByDeleteYnEquals("N", state, Sort.by(sortColumn).descending());
+        } else {
+            recruitList = recruitTagRepository.getRecruitTagByList(skills, state, Sort.by(sortColumn).descending());
+        }
 
         List<RecruitResponse> recruitResponseList = new ArrayList<>();
-
 
         for (Recruit recruit : recruitList) {
 
             List<Tag> findTagList = recruitTagRepository.getTagByRecruitId(recruit.getIdx());
             List<Position> findPositionList = recruitPositionRepository.getPositionByRecruitId(recruit.getIdx());
+            Optional<User> findUser = userRepository.findById(recruit.getUserIdx());
 
-            RecruitResponse recruitResponse = recruit.toDto(recruit, findPositionList, findTagList);
+            Long scrapCount = scrapRepository.countByScrapId_RecruitId(recruit.getIdx());
+
+            RecruitResponse recruitResponse = recruit.toDto(recruit, findPositionList, findTagList, findUser.get(), scrapCount);
 
             recruitResponseList.add(recruitResponse);
-
         }
 
         return recruitResponseList;
@@ -84,7 +107,7 @@ public class RecruitService {
 
     /* 특정 모집공고 상세조회 */
 
-    public RecruitDetail findById(Integer idx) {
+    public RecruitResponse findById(Integer idx) throws ParseException {
         Optional<Recruit> optionalRecruit = recruitRepository.findById(idx);
 
         if (optionalRecruit.isPresent()) {
@@ -93,9 +116,11 @@ public class RecruitService {
 
             List<Tag> findTagList = recruitTagRepository.getTagByRecruitId(recruit.getIdx());
             List<Position> findPositionList = recruitPositionRepository.getPositionByRecruitId(recruit.getIdx());
+            Optional<User> findUser = userRepository.findById(recruit.getUserIdx());
 
-            return recruit.toDetailDto(recruit, findPositionList, findTagList);
+            Long scrapCount = scrapRepository.countByScrapId_RecruitId(recruit.getIdx());
 
+            return recruit.toDto(recruit, findPositionList, findTagList, findUser.get(), scrapCount);
         } else {
             return null;
         }
@@ -104,35 +129,37 @@ public class RecruitService {
 
     /* 특정 모집공고 수정 */
     @Transactional
-    public void update(Integer idx, RecruitRequest recruitRequest) throws ParseException {
+    public Integer update(Integer idx, RecruitRequest recruitRequest, Long userId) throws ParseException {
 
         Optional<Recruit> optionalRecruit = recruitRepository.findById(idx);
 
-        if (optionalRecruit.isPresent()) {
+        if (userId == optionalRecruit.get().getUserIdx()) {
+            if (optionalRecruit.isPresent()) {
 
-            Recruit recruit1 = optionalRecruit.get();
+                Recruit recruit1 = optionalRecruit.get();
+                //기존에 들어가 있던 태그나 포지션이 삭제가 되어야함.
+                //findTagList, findPositionList
+                Recruit recruit = recruitRequest.toEntity();
+                recruit.setIdx(idx);
+                recruit.setViews(recruit1.getViews());
 
-            //기존에 들어가 있던 태그나 포지션이 삭제가 되어야함.
+                recruitRepository.save(recruit);
+                recruitTagRepository.deleteByRecruitId(recruit.getIdx());
+                List<RecruitTag> recruitTagsList = tagInsert(recruitRequest.getSkill(), recruit);
 
-
-            //findTagList, findPositionList
-            Recruit recruit = recruitRequest.toEntity();
-            recruit.setIdx(idx);
-            recruit.setViews(recruit1.getViews());
-
-            recruitRepository.save(recruit);
-            recruitTagRepository.deleteByRecruitId(recruit.getIdx());
-            List<RecruitTag> recruitTagsList = tagInsert(recruitRequest.getSkill(), recruit);
-
-            recruitPositionRepository.deleteByRecruitId(recruit.getIdx());
-            List<RecruitPosition> recruitPositionList = positionInsert(recruitRequest.getPosition(), recruit);
+                recruitPositionRepository.deleteByRecruitId(recruit.getIdx());
+                List<RecruitPosition> recruitPositionList = positionInsert(recruitRequest.getPosition(), recruit);
 
 
-            recruitTagRepository.saveAll(recruitTagsList);
-            recruitPositionRepository.saveAll(recruitPositionList);
+                recruitTagRepository.saveAll(recruitTagsList);
+                recruitPositionRepository.saveAll(recruitPositionList);
+                return 200;
 
+            } else {
+                return 404;
+            }
         } else {
-
+            return 401;
         }
 
     }
@@ -194,22 +221,50 @@ public class RecruitService {
 
 
     /* 특정 모집공고 삭제 */
-    public void delete(Integer idx) {
+    public Integer delete(Integer idx, Long userId) {
 
         Optional<Recruit> optionalRecruit = recruitRepository.findById(idx);
 
         if (optionalRecruit.isPresent()) {
 
             Recruit recruit = optionalRecruit.get();
-
-            recruitRepository.deleteRecruit(idx);
-
-
+            if (userId == recruit.getUserIdx()) {
+                recruitRepository.deleteRecruit(idx);
+                return 200;
+            } else {
+                return 401;
+            }
         } else {
-
+            return 404;
         }
 
     }
+
+    @Transactional
+    public Integer recruitScrap(Long userId, Integer recruitId) {
+
+        Optional<Scrap> scrap = scrapRepository.getScrapByRecruitUser(recruitId, userId);
+        if (scrap.isPresent()) {
+            scrapRepository.deleteScrapByRecruitUser(recruitId, userId);
+            return 1;
+        } else {
+            Scrap newScrap = new Scrap();
+            ScrapId scrapId = new ScrapId();
+            scrapId.setRecruitId(recruitId);
+            scrapId.setUserId(userId);
+            newScrap.setScrapId(scrapId);
+
+            Optional<Recruit> recruit = recruitRepository.findById(recruitId);
+            newScrap.setRecruit(recruit.get());
+            Optional<User> user = userRepository.findById(userId);
+            newScrap.setUser(user.get());
+
+
+            scrapRepository.save(newScrap);
+            return -1;
+        }
+    }
+
 
 }
 

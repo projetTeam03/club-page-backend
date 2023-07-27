@@ -11,6 +11,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
+import java.text.ParseException;
 import java.util.List;
 
 
@@ -49,7 +50,8 @@ public class Recruit {
     private Integer views; //처음은 무조건 0
 
     @Column(name = "user_idx")
-    private Integer userIdx;
+    @Setter
+    private Long userIdx;
 
     @Column(name="state")
     private Integer state; //진행중 0, 마감1
@@ -79,7 +81,6 @@ public class Recruit {
         this.participants = participants;
         this.scraps = 0;
         this.views = 0;
-        this.userIdx = 0;
         this.state = 0;
         this.deleteYn = "N";
         this.endDate = endDate;
@@ -89,25 +90,25 @@ public class Recruit {
 
 
 
-    public RecruitResponse toDto(Recruit recruit, List<Position> listPosition, List<Tag> listTag) {
+    public RecruitResponse toDto(Recruit recruit, List<Position> listPosition, List<Tag> listTag, User user, Long scraps) throws ParseException {
         return RecruitResponse.builder()
                 .recruit(recruit)
                 .listTag(listTag)
                 .listPosition(listPosition)
+                .user(user)
+                .scraps(scraps)
                 .build();
     }
 
 
 
-    public RecruitDetail toDetailDto(Recruit recruit, List<Position> listPosition, List<Tag> listTag) {
-        return RecruitDetail.builder()
-                .recruit(recruit)
-                .listTag(listTag)
-                .listPosition(listPosition)
-                .build();
-
-
-    }
+//    public RecruitDetail toDetailDto(Recruit recruit, List<Position> listPosition, List<Tag> listTag) {
+//        return RecruitDetail.builder()
+//                .recruit(recruit)
+//                .listTag(listTag)
+//                .listPosition(listPosition)
+//                .build();
+//    }
 
 
 
