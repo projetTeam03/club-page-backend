@@ -23,7 +23,7 @@ public class Position {
     @Column(name = "values", length = 45)
     private String value;
 
-    @OneToMany(mappedBy = "position", cascade = CascadeType.ALL)
-    private Set<PositionTag> tag = new HashSet<>();
+//    @OneToMany(mappedBy = "position", cascade = CascadeType.ALL)
+//    private Set<PositionTag> tag = new HashSet<>();
 
 }

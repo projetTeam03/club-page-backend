@@ -18,15 +18,18 @@ public class Tag {
     @Column(name = "idx", nullable = false)
     private Integer id;
 
-    @Column(name = "name", length = 45)
-    private String name;
+    @Column(name = "value", length = 45)
+    private String value;
 
     @Column(name = "url", length = 300)
     private String url;
 
-    @OneToMany(mappedBy = "tag", cascade = CascadeType.ALL)
-    @JsonIgnore
-    private Set<PositionTag> position = new HashSet<>();
+    @Column(name = "label", length = 45)
+    private String label;
+
+//    @OneToMany(mappedBy = "tag", cascade = CascadeType.ALL)
+//    @JsonIgnore
+//    private Set<PositionTag> position = new HashSet<>();
 
 
 
