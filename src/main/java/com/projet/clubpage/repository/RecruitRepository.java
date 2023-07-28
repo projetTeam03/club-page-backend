@@ -8,8 +8,10 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import javax.swing.text.html.Option;
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface RecruitRepository extends JpaRepository<Recruit, Integer> {
@@ -29,6 +31,9 @@ public interface RecruitRepository extends JpaRepository<Recruit, Integer> {
     void deleteRecruit(@Param("idx") Integer idx);
 
 
+    List<Recruit> findAllByUserIdxAndDeleteYnEquals(Long userIdx, String yn);
+
+    Optional<Recruit> findByIdxEqualsAndDeleteYnEquals(Integer idx, String deleteYn);
 
 
 }
