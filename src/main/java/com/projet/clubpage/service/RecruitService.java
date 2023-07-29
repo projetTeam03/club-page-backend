@@ -133,7 +133,7 @@ public class RecruitService {
 
         Optional<Recruit> optionalRecruit = recruitRepository.findById(idx);
 
-        if (userId == optionalRecruit.get().getUserIdx()) {
+        if (userId.equals(optionalRecruit.get().getUserIdx())) {
             if (optionalRecruit.isPresent()) {
 
                 Recruit recruit1 = optionalRecruit.get();
@@ -142,6 +142,7 @@ public class RecruitService {
                 Recruit recruit = recruitRequest.toEntity();
                 recruit.setIdx(idx);
                 recruit.setViews(recruit1.getViews());
+                recruit.setUserIdx(userId);
 
                 recruitRepository.save(recruit);
                 recruitTagRepository.deleteByRecruitId(recruit.getIdx());
@@ -228,7 +229,7 @@ public class RecruitService {
         if (optionalRecruit.isPresent()) {
 
             Recruit recruit = optionalRecruit.get();
-            if (userId == recruit.getUserIdx()) {
+            if (userId.equals(recruit.getUserIdx()))  {
                 recruitRepository.deleteRecruit(idx);
                 return 200;
             } else {
